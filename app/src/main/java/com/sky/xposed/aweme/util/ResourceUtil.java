@@ -17,6 +17,9 @@
 package com.sky.xposed.aweme.util;
 
 import android.content.Context;
+import android.net.Uri;
+
+import com.sky.xposed.aweme.BuildConfig;
 
 public class ResourceUtil {
 
@@ -74,5 +77,9 @@ public class ResourceUtil {
 
     private static int getIdentifierByType(Context context, String resourceName, String defType) {
         return context.getResources().getIdentifier(resourceName, defType, context.getPackageName());
+    }
+
+    public static Uri resourceIdToUri(int resourceId) {
+        return Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + resourceId);
     }
 }

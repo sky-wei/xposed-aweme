@@ -21,7 +21,6 @@ import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.UserHandle;
@@ -35,6 +34,7 @@ import android.widget.TextView;
 
 import com.sky.xposed.aweme.BuildConfig;
 import com.sky.xposed.aweme.Constant;
+import com.sky.xposed.aweme.R;
 import com.sky.xposed.aweme.hook.base.BaseHook;
 import com.sky.xposed.aweme.hook.handler.AutoAttentionHandler;
 import com.sky.xposed.aweme.hook.handler.AutoCommentHandler;
@@ -47,7 +47,7 @@ import com.sky.xposed.aweme.util.Alog;
 import com.sky.xposed.aweme.util.DisplayUtil;
 import com.sky.xposed.aweme.util.ResourceUtil;
 import com.sky.xposed.aweme.util.ToStringUtil;
-import com.sky.xposed.aweme.util.VToast;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -310,7 +310,7 @@ public class AweMeHook extends BaseHook {
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
         LinearLayout configLayout = newButtonView(
-                dialog, mVersionConfig.nameCopy, Constant.Name.TITLE,
+                dialog, R.drawable.ic_aweme, Constant.Name.TITLE,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -322,7 +322,7 @@ public class AweMeHook extends BaseHook {
                 });
 
         LinearLayout downloadLayout = newButtonView(
-                dialog, mVersionConfig.nameDownload, "无水印保存",
+                dialog, R.drawable.ic_download, "无水印保存",
                 new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -345,13 +345,11 @@ public class AweMeHook extends BaseHook {
     }
 
     private LinearLayout newButtonView(final Dialog dialog,
-                                       String imageName, String desc, View.OnClickListener listener) {
-
-        Drawable drawable = (Drawable) XposedHelpers
-                .callMethod(dialog, mVersionConfig.methodGetShareIconDrawble, imageName);
+                                       int imageRes, String desc, View.OnClickListener listener) {
 
         ImageView imageView = new ImageView(dialog.getContext());
-        imageView.setImageDrawable(drawable);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Picasso.get().load(ResourceUtil.resourceIdToUri(imageRes)).into(imageView);
 
         TextView textView = new TextView(dialog.getContext());
         textView.setText(desc);

@@ -16,10 +16,6 @@
 
 package com.sky.xposed.aweme.ui.dialog;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +31,7 @@ import com.sky.xposed.aweme.ui.view.CommonFrameLayout;
 import com.sky.xposed.aweme.ui.view.SimpleItemView;
 import com.sky.xposed.aweme.ui.view.SwitchItemView;
 import com.sky.xposed.aweme.ui.view.TitleView;
-import com.sky.xposed.aweme.util.Alog;
+import com.sky.xposed.aweme.util.ExtUtil;
 
 public class SettingsDialog extends BaseDialogFragment {
 
@@ -137,40 +133,7 @@ public class SettingsDialog extends BaseDialogFragment {
         });
 
         // 附加功能
-        expandFun();
-    }
-
-    /**
-     * 扩展的功能
-     */
-    private void expandFun() {
-
-        SharedPreferences sharedPreferences = getDefaultSharedPreferences();
-
-        long curTime = System.currentTimeMillis();
-        long lastTime = sharedPreferences.getLong(Constant.Preference.HB_LAST_TIME, 0);
-
-        if (curTime > lastTime
-                && curTime - lastTime < Constant.Time.HB_MAX_TIME) {
-            // 不需要处理
-            return;
-        }
-
-        try {
-            // 把支付宝的红包功能加进来
-            ClipboardManager cm = (ClipboardManager)
-                    getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(ClipData.newPlainText(
-                    null, "支付宝发红包啦！即日起还有机会额外获得余额宝消费红包！长按复制此消息，打开最新版支付宝就能领取！6EiXhm462g"));
-
-            // 保存最后时间
-            sharedPreferences
-                    .edit()
-                    .putLong(Constant.Preference.HB_LAST_TIME, curTime)
-                    .apply();
-        } catch (Throwable tr) {
-            Alog.e("出异常了", tr);
-        }
+        ExtUtil.init(getContext(), getDefaultSharedPreferences());
     }
 
     private TrackViewStatus.StatusChangeListener<Boolean> mBooleanChangeListener = new TrackViewStatus.StatusChangeListener<Boolean>() {

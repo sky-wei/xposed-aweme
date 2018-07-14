@@ -38,6 +38,7 @@ public class VersionManager {
         CONFIG_MAP.put("1.8.5", Config185.class);
         CONFIG_MAP.put("1.8.7", Config187.class);
         CONFIG_MAP.put("1.9.0", Config190.class);
+        CONFIG_MAP.put("2.0.0", Config200.class);
     }
 
     private Context mContext;
@@ -82,6 +83,31 @@ public class VersionManager {
 
     private PackageUitl.SimplePackageInfo getPackageInfo() {
         return PackageUitl.getSimplePackageInfo(mContext, mContext.getPackageName());
+    }
+
+    public static class Config200 extends Config {
+
+        public Config200() {
+
+            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$9";
+            classShareFragment = "com.ss.android.ugc.aweme.share.v";
+
+            classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.l";
+            classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.l.a";
+
+            methodOnResume = "o";
+            methodOnPause = "p";
+            methodSplashActivitySkip = "goMainActivity";
+
+            idShareLayout = "gl";
+            idAttentionLayout = "aen";
+            idLike1Layout = "aeq";
+            idLike2Layout = "aer";
+
+            fieldLimitTime = "t";
+            fieldViewTagAweme = "f";
+            fieldShortVideoContext = "c";
+        }
     }
 
     public static class Config190 extends Config {
