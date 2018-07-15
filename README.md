@@ -19,7 +19,9 @@
 [http://repo.xposed.info/module/com.sky.xposed.aweme](http://repo.xposed.info/module/com.sky.xposed.aweme)
 
 
-QQ交流群: __794327446__
+QQ交流群: 
+1. __794327446__(已满) 
+2. __824933593__
 
 ### 截图
 ![截图](screenshot/device-2018-06-15-102342.jpg)
