@@ -39,6 +39,7 @@ public class VersionManager {
         CONFIG_MAP.put("1.8.7", Config187.class);
         CONFIG_MAP.put("1.9.0", Config190.class);
         CONFIG_MAP.put("2.0.0", Config200.class);
+        CONFIG_MAP.put("2.0.1", Config200.class);
     }
 
     private Context mContext;
