@@ -13,7 +13,7 @@
 1. 视频界面 -> 分享 -> 抖音助手
 
 ##### 支持的版本
-1. v1.4.0版本支持抖音(v1.8.1,v1.8.2,v1.8.3,v1.8.5,v1.8.7,v1.9.0,v2.0.0,v2.0.1)
+1. v1.4.0版本支持抖音(v1.8.1,v1.8.2,v1.8.3,v1.8.5,v1.8.7,v1.9.0,v2.0.0,v2.0.1,v2.1.0)
 
 #### Xposed Module Repository
 [http://repo.xposed.info/module/com.sky.xposed.aweme](http://repo.xposed.info/module/com.sky.xposed.aweme)
