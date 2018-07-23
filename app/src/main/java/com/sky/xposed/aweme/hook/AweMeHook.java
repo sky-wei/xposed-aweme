@@ -43,17 +43,15 @@ import com.sky.xposed.aweme.hook.handler.AutoLikeHandler;
 import com.sky.xposed.aweme.hook.handler.AutoPlayHandler;
 import com.sky.xposed.aweme.ui.dialog.SettingsDialog;
 import com.sky.xposed.aweme.ui.util.LayoutUtil;
-import com.sky.xposed.aweme.util.Alog;
 import com.sky.xposed.aweme.util.DisplayUtil;
 import com.sky.xposed.aweme.util.ResourceUtil;
 import com.sky.xposed.aweme.util.ToStringUtil;
+import com.sky.xposed.javax.MethodHook;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -110,14 +108,12 @@ public class AweMeHook extends BaseHook {
      */
     private void autoPlayHook() {
 
-        findAndHookMethod(
+        findMethod(
                 mVersionConfig.classBaseListFragment,
-                mVersionConfig.methodOnResume,
-                new XC_MethodHook() {
+                mVersionConfig.methodOnResume)
+                .hook(new MethodHook.AfterCallback() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
 //                        Alog.d(">>>>>>>>>>>>>>>>>> onResume " + param.thisObject);
 
                         // 保存当前对象
@@ -129,14 +125,12 @@ public class AweMeHook extends BaseHook {
                     }
                 });
 
-        findAndHookMethod(
+        findMethod(
                 mVersionConfig.classBaseListFragment,
-                mVersionConfig.methodOnPause,
-                new XC_MethodHook() {
+                mVersionConfig.methodOnPause)
+                .hook(new MethodHook.AfterCallback() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-
+                    public void onAfter(XC_MethodHook.MethodHookParam methodHookParam) {
 //                        Alog.d(">>>>>>>>>>>>>>>>>> onPause " + param.thisObject);
 
                         // 重置对象
@@ -147,15 +141,13 @@ public class AweMeHook extends BaseHook {
                     }
                 });
 
-        findAndHookMethod(
+        findMethod(
                 mVersionConfig.classHomeChange,
                 mVersionConfig.methodHomeChange,
-                String.class,
-                new XC_MethodHook() {
+                String.class)
+                .hook(new MethodHook.AfterCallback() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
                         // 获取Tab切换的名称
                         String name = (String) param.args[0];
                         mAutoPlayHandler.setAutoPlay("HOME".equals(name));
@@ -165,15 +157,13 @@ public class AweMeHook extends BaseHook {
 
     private void videoSwitchHook() {
 
-        findAndHookMethod(
+        findMethod(
                 mVersionConfig.classVerticalViewPager,
                 mVersionConfig.methodVerticalViewPagerChange,
-                int.class, boolean.class, boolean.class, int.class,
-                new XC_MethodHook() {
+                int.class, boolean.class, boolean.class, int.class)
+                .hook(new MethodHook.AfterCallback() {
                     @Override
-                    protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
                         // 切换的下标
                         int position = (int) param.args[0];
 
@@ -203,26 +193,24 @@ public class AweMeHook extends BaseHook {
         final Object itemData = XposedHelpers.newInstance(
                 adapterDataClass, Constant.Name.TITLE, false);
 
-        XposedHelpers.findAndHookConstructor(
-                adapterClass,
-                Context.class, List.class,
-                new XC_MethodHook() {
+        findConstructor(adapterClass, Context.class, List.class)
+                .hook(new MethodHook.AfterCallback() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
-
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
                         // 添加到列表中
                         List list = (List) param.args[1];
                         list.add(itemData);
                     }
                 });
 
-        XposedHelpers.findAndHookMethod(
+
+        findMethod(
                 fragmentClass, mVersionConfig.methodMenuAction,
-                fragmentClass, String.class,
-                new XC_MethodReplacement() {
+                fragmentClass, String.class)
+                .replace(new MethodHook.ReplaceCallback() {
+
                     @Override
-                    protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
+                    public Object onReplace(XC_MethodHook.MethodHookParam param) {
 
                         Activity activity = (Activity) XposedHelpers
                                 .callMethod(param.args[0], mVersionConfig.methodGetActivity);
@@ -234,7 +222,7 @@ public class AweMeHook extends BaseHook {
                             dialog.show(activity.getFragmentManager(), "settings");
                             return null;
                         }
-                        return XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
+                        return invokeOriginalMethod(param);
                     }
                 });
     }
@@ -244,14 +232,13 @@ public class AweMeHook extends BaseHook {
      */
     private void saveVideoHook() {
 
-        findAndHookMethod(
+        findMethod(
                 mVersionConfig.classShareFragment,
                 mVersionConfig.methodOnCreate,
-                Bundle.class,
-                new XC_MethodHook() {
+                Bundle.class)
+                .hook(new MethodHook.AfterCallback() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
                         // 注入View
                         injectionView((Dialog) param.thisObject);
                     }
@@ -268,27 +255,20 @@ public class AweMeHook extends BaseHook {
             return ;
         }
 
-        findAndHookMethod(
-                mVersionConfig.classSplashActivity,
-                mVersionConfig.methodOnCreate,
-                Bundle.class,
-                new XC_MethodHook() {
-
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
-
-                        if (mUserConfigManager.isSkipStartAd()) {
-                            try {
-                                XposedHelpers.callMethod(param.thisObject,
-                                        mVersionConfig.methodSplashActivitySkip, new Bundle());
-                            } catch (Throwable tr) {
-                                Alog.d("跳转异常", tr);
-                            }
-                        }
-                    }
-                }
-        );
+//        findMethod(
+//                mVersionConfig.classSplashActivity,
+//                mVersionConfig.methodOnCreate)
+//                .hook(new MethodHook.AfterCallback() {
+//                    @Override
+//                    public void onAfter(XC_MethodHook.MethodHookParam param) {
+//
+//                        if (mUserConfigManager.isSkipStartAd()) {
+//                            // 路过广告
+//                            XposedHelpers.callMethod(param.thisObject,
+//                                    mVersionConfig.methodSplashActivitySkip, new Bundle());
+//                        }
+//                    }
+//                });
     }
 
     private void injectionView(final Dialog dialog) {
@@ -378,14 +358,13 @@ public class AweMeHook extends BaseHook {
 
     private void removeLimitHook() {
 
-        findAndHookMethod(
+        findMethod(
                 mVersionConfig.classVideoRecordActivity,
                 mVersionConfig.methodOnCreate,
-                Bundle.class,
-                new XC_MethodHook() {
+                Bundle.class)
+                .hook(new MethodHook.AfterCallback() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
 
                         if (mUserConfigManager.isRemoveLimit()) {
 
@@ -403,14 +382,14 @@ public class AweMeHook extends BaseHook {
                     }
                 });
 
-        findAndHookMethod(
+
+        findMethod(
                 mVersionConfig.classVideoRecordNewActivity,
                 mVersionConfig.methodOnCreate,
-                Bundle.class,
-                new XC_MethodHook() {
+                Bundle.class)
+                .hook(new MethodHook.AfterCallback() {
                     @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
 
                         if (mUserConfigManager.isRemoveLimit()
                                 && !TextUtils.isEmpty(mVersionConfig.fieldShortVideoContext)) {
@@ -429,31 +408,25 @@ public class AweMeHook extends BaseHook {
 
     private void testHook() {
 
-        findAndHookMethod(
-                "android.app.Instrumentation", "execStartActivity",
+        findMethod("android.app.Instrumentation", "execStartActivity",
                 Context.class, IBinder.class, IBinder.class,
-                Activity.class, Intent.class, int.class, Bundle.class,
-                new XC_MethodHook() {
-
+                Activity.class, Intent.class, int.class, Bundle.class)
+                .hook(new MethodHook.BeforeCallback() {
                     @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
+                    public void onBefore(XC_MethodHook.MethodHookParam param) {
 
                         Intent intent = (Intent) param.args[4];
                         ToStringUtil.toString("Instrumentation#execStartActivity: " + intent.getComponent(), intent);
                     }
                 });
 
-        findAndHookMethod(
-                "android.app.Instrumentation", "execStartActivity",
+        findMethod("android.app.Instrumentation", "execStartActivity",
                 Context.class, IBinder.class, IBinder.class,
                 Activity.class, Intent.class, int.class,
-                Bundle.class, UserHandle.class,
-                new XC_MethodHook() {
-
+                Bundle.class, UserHandle.class)
+                .hook(new MethodHook.BeforeCallback() {
                     @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
+                    public void onBefore(XC_MethodHook.MethodHookParam param) {
 
                         Intent intent = (Intent) param.args[4];
                         ToStringUtil.toString("Instrumentation#execStartActivity: " + intent.getComponent(), intent);

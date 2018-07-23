@@ -20,13 +20,15 @@ import android.app.Application;
 import android.content.Context;
 
 import com.sky.xposed.aweme.hook.HookManager;
+import com.sky.xposed.aweme.util.Alog;
+import com.sky.xposed.javax.MethodHook;
+import com.sky.xposed.javax.XposedPlus;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
-public class Main implements IXposedHookLoadPackage {
+public class Main implements IXposedHookLoadPackage, MethodHook.ThrowableCallback {
 
 
     @Override
@@ -42,15 +44,16 @@ public class Main implements IXposedHookLoadPackage {
 
     private void hookAwemeApplication(final XC_LoadPackage.LoadPackageParam lpparam) {
 
-        XposedHelpers.findAndHookMethod(
-                "com.ss.android.ugc.aweme.app.AwemeApplication",
-                lpparam.classLoader,
-                "onCreate",
-                new XC_MethodHook() {
+        // 设置默认的参数
+        XposedPlus.setDefaultInstance(new XposedPlus.Builder(lpparam)
+                .throwableCallback(this)
+                .build());
 
+        XposedPlus.get()
+                .findMethod("com.ss.android.ugc.aweme.app.AwemeApplication", "onCreate")
+                .hook(new MethodHook.BeforeCallback() {
                     @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
+                    public void onBefore(XC_MethodHook.MethodHookParam param) {
 
                         Application application = (Application) param.thisObject;
                         Context context = application.getApplicationContext();
@@ -61,5 +64,10 @@ public class Main implements IXposedHookLoadPackage {
                                 .handleLoadPackage();
                     }
                 });
+    }
+
+    @Override
+    public void onThrowable(Throwable throwable) {
+        Alog.e("Throwable", throwable);
     }
 }

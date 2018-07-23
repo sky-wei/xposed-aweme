@@ -25,8 +25,11 @@ import com.sky.xposed.aweme.data.UserConfigManager;
 import com.sky.xposed.aweme.hook.HookManager;
 import com.sky.xposed.aweme.hook.VersionManager;
 import com.sky.xposed.aweme.util.Alog;
+import com.sky.xposed.javax.MethodHook;
+import com.sky.xposed.javax.XposedPlus;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -71,14 +74,35 @@ public abstract class BaseHook {
     }
 
     public Class findClass(String className) {
-        return findClass(className, mParam.classLoader);
+        return XposedPlus.get().findClass(className);
     }
 
     public Class findClass(String className, ClassLoader classLoader) {
         return XposedHelpers.findClass(className, classLoader);
     }
 
-    public XC_MethodHook.Unhook findAndHookMethod(String className, String methodName, Object... parameterTypesAndCallback) {
-        return XposedHelpers.findAndHookMethod(className, mParam.classLoader, methodName, parameterTypesAndCallback);
+    public MethodHook findMethod(String className, String methodName, Object... parameterTypes) {
+        return XposedPlus.get().findMethod(className, methodName, parameterTypes);
+    }
+
+    public MethodHook findMethod(Class clazz, String methodName, Object... parameterTypes) {
+        return XposedPlus.get().findMethod(clazz, methodName, parameterTypes);
+    }
+
+    public MethodHook findConstructor(String className, Object... parameterTypes) {
+        return XposedPlus.get().findConstructor(className, parameterTypes);
+    }
+
+    public MethodHook findConstructor(Class clazz, Object... parameterTypes) {
+        return XposedPlus.get().findConstructor(clazz, parameterTypes);
+    }
+
+    public Object invokeOriginalMethod(XC_MethodHook.MethodHookParam param) {
+        try {
+            XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
+        } catch (Throwable e) {
+            Alog.d("异常了", e);
+        }
+        return null;
     }
 }
