@@ -109,6 +109,9 @@ public class VersionManager {
             fieldLimitTime = "t";
             fieldViewTagAweme = "f";
             fieldShortVideoContext = "c";
+
+            // 支持移除推荐广告
+            isSupportRemoveFeedAd = true;
         }
     }
 
@@ -286,6 +289,8 @@ public class VersionManager {
         /** CommentPublishModel */
         public String classCommentPublishModel = "com.ss.android.ugc.aweme.comment.d.g";
 
+        public String classFeedApi = "com.ss.android.ugc.aweme.feed.api.FeedApi";
+
         public String methodOnCreate = "onCreate";
 
         /**  com.ss.android.ugc.aweme.login.c.a(this); */
@@ -322,6 +327,12 @@ public class VersionManager {
         /** private void a(Bundle bundle) */
         public String methodSplashActivitySkip = "";
 
+        public String methodFeedList = "a";
+
+        public String methodAwemeIsAd = "isAd";
+
+        public String methodAwemeIsIsAppAd = "isAppAd";
+
         public String fieldMViewPager = "mViewPager";
 
         /** VideoRecordActivity NetworkUtils.DEFAULT_CONN_POOL_TIMEOUT */
@@ -345,6 +356,8 @@ public class VersionManager {
 
         public String fieldAwemeAId = "aid";
 
+        public String fieldFeedListItems = "items";
+
         /** 分享的Layout */
         public String idShareLayout = "jq";
 
@@ -358,5 +371,10 @@ public class VersionManager {
         public String nameDownload = "download";
 
         public String nameCopy = "copy";
+
+        /**
+         * 是否推荐广告
+         */
+        public boolean isSupportRemoveFeedAd = false;
     }
 }

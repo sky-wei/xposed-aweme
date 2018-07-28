@@ -43,7 +43,7 @@ public class MoreSettingsDialog extends BaseDialogFragment {
 
     private EditTextItemView mAutoPlaySleepTime;
     private EditTextItemView mRecordVideoTime;
-//    private SwitchItemView sivSkipStartAd;
+    private SwitchItemView sivRemoveAd;
 
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container) {
@@ -66,11 +66,11 @@ public class MoreSettingsDialog extends BaseDialogFragment {
         mRecordVideoTime.setUnit("秒");
         mRecordVideoTime.setInputType(Constant.InputType.NUMBER_SIGNED);
 
-//        sivSkipStartAd = ViewUtil.newSwitchItemView(getContext(), "自动跳过启动广告");
+        sivRemoveAd = ViewUtil.newSwitchItemView(getContext(), "移除推荐广告");
 
         mCommonFrameLayout.addContent(mAutoPlaySleepTime, true);
         mCommonFrameLayout.addContent(mRecordVideoTime);
-//        mCommonFrameLayout.addContent(sivSkipStartAd);
+        mCommonFrameLayout.addContent(sivRemoveAd);
 
         return mCommonFrameLayout;
     }
@@ -84,7 +84,7 @@ public class MoreSettingsDialog extends BaseDialogFragment {
                 Integer.toString(Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME), mStringChangeListener);
         trackBind(mRecordVideoTime, Constant.Preference.RECORD_VIDEO_TIME,
                 Integer.toString(Constant.DefaultValue.RECORD_VIDEO_TIME), mStringChangeListener);
-//        trackBind(sivSkipStartAd, Constant.Preference.SKIP_START_AD, false, mBooleanChangeListener);
+        trackBind(sivRemoveAd, Constant.Preference.REMOVE_AD, false, mBooleanChangeListener);
     }
 
     private TrackViewStatus.StatusChangeListener mStringChangeListener = new TrackViewStatus.StatusChangeListener<String>() {

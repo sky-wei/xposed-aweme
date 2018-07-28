@@ -31,6 +31,8 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import de.robv.android.xposed.XposedHelpers;
@@ -40,7 +42,9 @@ public class AutoDownloadHandler extends CommonHandler {
 
     private static final String TAG = "AutoDownloadHandler";
 
-    public int mPosition;
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+    private int mPosition;
     private File mDownloadDir;
 
     public AutoDownloadHandler(HookManager hookManager) {
@@ -110,7 +114,7 @@ public class AutoDownloadHandler extends CommonHandler {
 
     public void downloadVideo(String url) {
 
-        String fileName = MD5Util.md5sum(url) + ".mp4";
+        String fileName = mDateFormat.format(new Date()) + ".mp4";
         File downloadFile = new File(mDownloadDir, fileName);
 
         if (downloadFile.exists()) {

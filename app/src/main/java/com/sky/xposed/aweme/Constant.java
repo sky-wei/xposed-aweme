@@ -52,8 +52,8 @@ public interface Constant {
         /** 录制视频的最大时间 */
         String RECORD_VIDEO_TIME = "record_video_time";
 
-        /** 跳过启动界面广告 */
-        String SKIP_START_AD = "skip_start_ad";
+        /** 移除广告 */
+        String REMOVE_AD = "remove_ad";
 
         /** 红包的最大时间 */
         String HB_LAST_TIME = "hb_last_time";

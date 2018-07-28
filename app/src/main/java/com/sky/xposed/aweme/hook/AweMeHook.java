@@ -43,12 +43,14 @@ import com.sky.xposed.aweme.hook.handler.AutoLikeHandler;
 import com.sky.xposed.aweme.hook.handler.AutoPlayHandler;
 import com.sky.xposed.aweme.ui.dialog.SettingsDialog;
 import com.sky.xposed.aweme.ui.util.LayoutUtil;
+import com.sky.xposed.aweme.util.Alog;
 import com.sky.xposed.aweme.util.DisplayUtil;
 import com.sky.xposed.aweme.util.ResourceUtil;
 import com.sky.xposed.aweme.util.ToStringUtil;
 import com.sky.xposed.javax.MethodHook;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -91,8 +93,8 @@ public class AweMeHook extends BaseHook {
         // 移除视频限制
         removeLimitHook();
 
-        // 其他Hook
-        otherHook();
+        // 移除广告Hook
+        removeAdHook();
     }
 
     public void onModifyValue(String key, Object value) {
@@ -246,9 +248,28 @@ public class AweMeHook extends BaseHook {
     }
 
     /**
-     * 其他功能的Hook
+     * 移除广告的Hook
      */
-    private void otherHook() {
+    private void removeAdHook() {
+
+        if (mVersionConfig.isSupportRemoveFeedAd) {
+
+            // 移除推荐广告
+            findMethod(mVersionConfig.classFeedApi, mVersionConfig.methodFeedList,
+                    int.class, long.class, long.class, int.class,
+                    Integer.class, String.class, int.class)
+                    .hook(new MethodHook.AfterCallback() {
+                        @Override
+                        public void onAfter(XC_MethodHook.MethodHookParam param) {
+
+                            if (mUserConfigManager.isRemoveAd()) {
+                                // 移除广告
+                                param.setResult(removeFeedAd(param.getResult()));
+                            }
+                        }
+                    });
+        }
+
 
         if (TextUtils.isEmpty(
                 mVersionConfig.methodSplashActivitySkip)) {
@@ -406,6 +427,44 @@ public class AweMeHook extends BaseHook {
                 });
     }
 
+    /**
+     * 移除推荐的广告
+     * @param feedList
+     * @return
+     */
+    private Object removeFeedAd(Object feedList) {
+
+        if (feedList == null) return null;
+
+        try {
+            List<Object> newItems = new ArrayList<>();
+            List<Object> items = (List<Object>) XposedHelpers
+                    .getObjectField(feedList, mVersionConfig.fieldFeedListItems);
+
+            for (Object item : items) {
+                // 只添加非广告视频
+                if (!isAd(item)) newItems.add(item);
+            }
+
+            // 重新设置列表数据
+            XposedHelpers.setObjectField(feedList,
+                    mVersionConfig.fieldFeedListItems, newItems);
+        } catch (Throwable tr) {
+            Alog.d("移除广告异常", tr);
+        }
+        return feedList;
+    }
+
+    /**
+     * 判断当前视频是不是广告
+     * @param aweme
+     * @return
+     */
+    private boolean isAd(Object aweme) {
+        return (boolean) XposedHelpers.callMethod(aweme, mVersionConfig.methodAwemeIsAd)
+                || (boolean) XposedHelpers.callMethod(aweme, mVersionConfig.methodAwemeIsIsAppAd);
+    }
+
     private void testHook() {
 
         findMethod("android.app.Instrumentation", "execStartActivity",
@@ -432,6 +491,7 @@ public class AweMeHook extends BaseHook {
                         ToStringUtil.toString("Instrumentation#execStartActivity: " + intent.getComponent(), intent);
                     }
                 });
+
 
 //        // DirectOpenType("record_plan", b.Integer, Integer.valueOf(0)),
 //        Class aClass = findClass("com.ss.android.ugc.aweme.n.a.a");

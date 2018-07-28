@@ -58,8 +58,8 @@ public class UserConfigManager {
         return getBoolean(Constant.Preference.REMOVE_LIMIT);
     }
 
-    public boolean isSkipStartAd() {
-        return getBoolean(Constant.Preference.SKIP_START_AD);
+    public boolean isRemoveAd() {
+        return getBoolean(Constant.Preference.REMOVE_AD);
     }
 
     public boolean isCommentListEmpty() {
