@@ -46,9 +46,6 @@ public interface Constant {
         /** 解除15s视频限制 */
         String REMOVE_LIMIT = "remove_limit";
 
-        /** 自动播放休眠时间 */
-        String AUTO_PLAY_SLEEP_TIME = "auto_play_sleep_time";
-
         /** 录制视频的最大时间 */
         String RECORD_VIDEO_TIME = "record_video_time";
 

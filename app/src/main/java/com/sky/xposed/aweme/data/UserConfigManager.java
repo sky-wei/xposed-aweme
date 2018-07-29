@@ -78,19 +78,6 @@ public class UserConfigManager {
         return new ArrayList<>(commentSet);
     }
 
-    public long getAutoPlaySleepTime() {
-
-        int time = ConversionUtil.parseInt(getString(
-                Constant.Preference.AUTO_PLAY_SLEEP_TIME,
-                Integer.toString(Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME)));
-
-        if (time <= 0) {
-            return Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME * 1000;
-        }
-
-        return time * 1000;
-    }
-
     public long getRecordVideoTime() {
 
         int time = ConversionUtil.parseInt(getString(

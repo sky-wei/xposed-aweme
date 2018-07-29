@@ -19,7 +19,6 @@ package com.sky.xposed.aweme.hook.handler;
 import android.view.ViewGroup;
 
 import com.sky.xposed.aweme.hook.HookManager;
-import com.sky.xposed.aweme.util.Alog;
 import com.sky.xposed.aweme.util.RandomUtil;
 import com.sky.xposed.aweme.util.VToast;
 
@@ -33,50 +32,19 @@ public class AutoPlayHandler extends CommonHandler {
         super(hookManager);
     }
 
-    public void setAutoPlay(boolean play) {
-
-        if (play) {
-            // 开始自动播放
-            startPlay();
-        } else {
-            if (isPlaying) VToast.show("停止自动播放");
-            // 关闭自动播放
-            stopPlay();
-        }
-    }
-
-    public void startPlay() {
-        startPlay(mUserConfigManager.getAutoPlaySleepTime());
-    }
-
-    public void startPlay(long delayMillis) {
-
-        if (!mUserConfigManager.isAutoPlay()) {
-            // 不进行播放处理
-            return ;
-        }
-
-        if (isPlaying) {
-            Alog.d("正在自动播放视频");
-            return;
-        }
-
-        // 标识正在播放
-        isPlaying = true;
-
-        // 播放下一个
-        playNext(delayMillis);
-    }
 
     public void stopPlay() {
         isPlaying = false;
         mHandler.removeCallbacks(this);
     }
 
-    private void playNext(long delayMillis) {
+    /**
+     * 直接播放下一个
+     */
+    public void playNext() {
         // 开始播放
-        mHandler.postDelayed(this, delayMillis);
-        VToast.show((delayMillis / 1000) + "秒后播放下一个视频");
+        isPlaying = true;
+        mHandler.postDelayed(this, 500);
     }
 
     @Override
@@ -106,8 +74,5 @@ public class AutoPlayHandler extends CommonHandler {
         // 切换页面
         XposedHelpers.callMethod(mViewPager, mVersionConfig.methodVerticalViewPagerChange,
                 new Object[]{ currentItem + 1, true, true, -1270 + RandomUtil.random(100)});
-
-        // 继续播放下一个
-        playNext(mUserConfigManager.getAutoPlaySleepTime());
     }
 }

@@ -32,12 +32,6 @@ public class VersionManager {
     private final static Map<String, Class<? extends Config>> CONFIG_MAP = new HashMap<>();
 
     static {
-        CONFIG_MAP.put("1.8.1", Config181.class);
-        CONFIG_MAP.put("1.8.2", Config182.class);
-        CONFIG_MAP.put("1.8.3", Config183.class);
-        CONFIG_MAP.put("1.8.5", Config185.class);
-        CONFIG_MAP.put("1.8.7", Config187.class);
-        CONFIG_MAP.put("1.9.0", Config190.class);
         CONFIG_MAP.put("2.0.0", Config200.class);
         CONFIG_MAP.put("2.0.1", Config200.class);
         CONFIG_MAP.put("2.1.0", Config210.class);
@@ -99,7 +93,6 @@ public class VersionManager {
 
             methodOnResume = "o";
             methodOnPause = "p";
-            methodSplashActivitySkip = "goMainActivity";
 
             idShareLayout = "gn";
             idAttentionLayout = "afb";
@@ -109,9 +102,6 @@ public class VersionManager {
             fieldLimitTime = "t";
             fieldViewTagAweme = "f";
             fieldShortVideoContext = "c";
-
-            // 支持移除推荐广告
-            isSupportRemoveFeedAd = true;
         }
     }
 
@@ -127,7 +117,6 @@ public class VersionManager {
 
             methodOnResume = "o";
             methodOnPause = "p";
-            methodSplashActivitySkip = "goMainActivity";
 
             idShareLayout = "gl";
             idAttentionLayout = "aen";
@@ -137,124 +126,6 @@ public class VersionManager {
             fieldLimitTime = "t";
             fieldViewTagAweme = "f";
             fieldShortVideoContext = "c";
-        }
-    }
-
-    public static class Config190 extends Config {
-
-        public Config190() {
-
-            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$9";
-
-            classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.l";
-            classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.l.a";
-
-            methodOnResume = "o";
-            methodOnPause = "p";
-            methodSplashActivitySkip = "a";
-
-            idShareLayout = "gk";
-            idAttentionLayout = "aes";
-            idLike1Layout = "aeu";
-            idLike2Layout = "aev";
-
-            fieldLimitTime = "t";
-            fieldViewTagAweme = "f";
-            fieldShortVideoContext = "c";
-        }
-    }
-
-    public static class Config187 extends Config {
-
-        public Config187() {
-
-            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$6";
-
-            classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.m";
-            classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.m.a";
-
-            methodOnResume = "o";
-            methodOnPause = "p";
-            methodSplashActivitySkip = "a";
-
-            idShareLayout = "gi";
-            idAttentionLayout = "ade";
-            idLike1Layout = "adg";
-            idLike2Layout = "adh";
-
-            fieldLimitTime = "t";
-            fieldViewTagAweme = "f";
-            fieldShortVideoContext = "c";
-        }
-    }
-
-    public static class Config185 extends Config {
-
-        public Config185() {
-
-            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$5";
-
-            classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.m";
-            classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.m.a";
-
-            methodOnResume = "o";
-            methodOnPause = "p";
-            methodSplashActivitySkip = "a";
-
-            idShareLayout = "gd";
-            idAttentionLayout = "abh";
-            idLike1Layout = "abj";
-            idLike2Layout = "abk";
-
-            fieldLimitTime = "u";
-            fieldShortVideoContext = "c";
-        }
-    }
-
-    public static class Config183 extends Config {
-
-        public Config183() {
-
-            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$4";
-
-            methodOnResume = "o";
-            methodOnPause = "p";
-
-            idShareLayout = "g3";
-            idAttentionLayout = "a_v";
-            idLike1Layout = "a_x";
-            idLike2Layout = "a_y";
-
-            fieldLimitTime = "w";
-        }
-    }
-
-    public static class Config182 extends Config {
-
-        public Config182() {
-
-            methodOnResume = "g";
-            methodOnPause = "h";
-
-            idShareLayout = "ft";
-            idAttentionLayout = "a8u";
-            idLike1Layout = "a8w";
-            idLike2Layout = "a8x";
-
-            fieldLimitTime = "w";
-        }
-    }
-
-    public static class Config181 extends Config {
-
-        public Config181() {
-
-            idShareLayout = "g7";
-            idAttentionLayout = "a7r";
-            idLike1Layout = "a7t";
-            idLike2Layout = "a7u";
-
-            fieldLimitTime = "u";
         }
     }
 
@@ -273,6 +144,8 @@ public class VersionManager {
         public String classVideoRecordActivity = "com.ss.android.ugc.aweme.shortvideo.ui.VideoRecordActivity";
 
         public String classVideoRecordNewActivity = "com.ss.android.ugc.aweme.shortvideo.ui.VideoRecordNewActivity";
+
+        public String classCutVideoActivity = "com.ss.android.ugc.aweme.shortvideo.ui.CutVideoActivity";
 
         /** ShareDialog  */
         public String classShareFragment = "com.douyin.share.a.c.c";
@@ -321,17 +194,24 @@ public class VersionManager {
 
         public String methodSendComment = "a";
 
+        public String methodPlayComplete = "l";
+
         /** com.ss.android.ugc.aweme.feed.adapter.h FeedPagerAdapter */
         public String methodAdapterAweme = "b";
 
+        public String methodSplashOnResume = "onResume";
+
         /** private void a(Bundle bundle) */
-        public String methodSplashActivitySkip = "";
+        public String methodSplashActivitySkip = "goMainActivity";
 
         public String methodFeedList = "a";
 
         public String methodAwemeIsAd = "isAd";
 
         public String methodAwemeIsIsAppAd = "isAppAd";
+
+        /** !((IBridgeService) ServiceManager.get().getService(IBridgeService.class)).isFocusOnVideoTime() */
+        public String methodCutVideoTime = "k";
 
         public String fieldMViewPager = "mViewPager";
 
@@ -371,10 +251,5 @@ public class VersionManager {
         public String nameDownload = "download";
 
         public String nameCopy = "copy";
-
-        /**
-         * 是否推荐广告
-         */
-        public boolean isSupportRemoveFeedAd = false;
     }
 }

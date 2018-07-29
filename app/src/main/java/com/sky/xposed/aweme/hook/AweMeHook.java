@@ -47,6 +47,7 @@ import com.sky.xposed.aweme.util.Alog;
 import com.sky.xposed.aweme.util.DisplayUtil;
 import com.sky.xposed.aweme.util.ResourceUtil;
 import com.sky.xposed.aweme.util.ToStringUtil;
+import com.sky.xposed.aweme.util.VToast;
 import com.sky.xposed.javax.MethodHook;
 import com.squareup.picasso.Picasso;
 
@@ -54,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -99,9 +101,9 @@ public class AweMeHook extends BaseHook {
 
     public void onModifyValue(String key, Object value) {
 
-        if (Constant.Preference.AUTO_PLAY.equals(key)) {
+        if (Constant.Preference.AUTO_PLAY.equals(key) && (boolean) value) {
             // 设置自动播放
-            mAutoPlayHandler.setAutoPlay((boolean) value);
+            VToast.show("播放完当前视频后将自动播放下一个视频！");
         }
     }
 
@@ -116,14 +118,9 @@ public class AweMeHook extends BaseHook {
                 .hook(new MethodHook.AfterCallback() {
                     @Override
                     public void onAfter(XC_MethodHook.MethodHookParam param) {
-//                        Alog.d(">>>>>>>>>>>>>>>>>> onResume " + param.thisObject);
-
                         // 保存当前对象
                         mObjectManager.setViewPager(XposedHelpers.getObjectField(
                                 param.thisObject, mVersionConfig.fieldMViewPager));
-
-                        // 开始自动播放
-                        mAutoPlayHandler.startPlay();
                     }
                 });
 
@@ -133,13 +130,8 @@ public class AweMeHook extends BaseHook {
                 .hook(new MethodHook.AfterCallback() {
                     @Override
                     public void onAfter(XC_MethodHook.MethodHookParam methodHookParam) {
-//                        Alog.d(">>>>>>>>>>>>>>>>>> onPause " + param.thisObject);
-
                         // 重置对象
                         mObjectManager.setViewPager(null);
-
-                        // 停止播放
-                        mAutoPlayHandler.stopPlay();
                     }
                 });
 
@@ -152,7 +144,22 @@ public class AweMeHook extends BaseHook {
                     public void onAfter(XC_MethodHook.MethodHookParam param) {
                         // 获取Tab切换的名称
                         String name = (String) param.args[0];
-                        mAutoPlayHandler.setAutoPlay("HOME".equals(name));
+                        if ("HOME".equals(name)) mAutoPlayHandler.stopPlay();
+                    }
+                });
+
+        findMethod(
+                mVersionConfig.classBaseListFragment,
+                mVersionConfig.methodPlayComplete,
+                String.class)
+                .hook(new MethodHook.AfterCallback() {
+                    @Override
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
+
+                        if (mUserConfigManager.isAutoPlay()) {
+                            // 播放下一个
+                            mAutoPlayHandler.playNext();
+                        }
                     }
                 });
     }
@@ -252,44 +259,36 @@ public class AweMeHook extends BaseHook {
      */
     private void removeAdHook() {
 
-        if (mVersionConfig.isSupportRemoveFeedAd) {
+        // 移除推荐广告
+        findMethod(mVersionConfig.classFeedApi, mVersionConfig.methodFeedList,
+                int.class, long.class, long.class, int.class,
+                Integer.class, String.class, int.class)
+                .hook(new MethodHook.AfterCallback() {
+                    @Override
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
 
-            // 移除推荐广告
-            findMethod(mVersionConfig.classFeedApi, mVersionConfig.methodFeedList,
-                    int.class, long.class, long.class, int.class,
-                    Integer.class, String.class, int.class)
-                    .hook(new MethodHook.AfterCallback() {
-                        @Override
-                        public void onAfter(XC_MethodHook.MethodHookParam param) {
-
-                            if (mUserConfigManager.isRemoveAd()) {
-                                // 移除广告
-                                param.setResult(removeFeedAd(param.getResult()));
-                            }
+                        if (mUserConfigManager.isRemoveAd()) {
+                            // 移除广告
+                            param.setResult(removeFeedAd(param.getResult()));
                         }
-                    });
-        }
+                    }
+                });
 
 
-        if (TextUtils.isEmpty(
-                mVersionConfig.methodSplashActivitySkip)) {
-            return ;
-        }
+        findMethod(
+                mVersionConfig.classSplashActivity,
+                mVersionConfig.methodSplashOnResume)
+                .hook(new MethodHook.AfterCallback() {
+                    @Override
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
 
-//        findMethod(
-//                mVersionConfig.classSplashActivity,
-//                mVersionConfig.methodOnCreate)
-//                .hook(new MethodHook.AfterCallback() {
-//                    @Override
-//                    public void onAfter(XC_MethodHook.MethodHookParam param) {
-//
-//                        if (mUserConfigManager.isSkipStartAd()) {
-//                            // 路过广告
-//                            XposedHelpers.callMethod(param.thisObject,
-//                                    mVersionConfig.methodSplashActivitySkip, new Bundle());
-//                        }
-//                    }
-//                });
+                        if (mUserConfigManager.isRemoveAd()) {
+                            // 路过广告
+                            XposedHelpers.callMethod(param.thisObject,
+                                    mVersionConfig.methodSplashActivitySkip, new Bundle());
+                        }
+                    }
+                });
     }
 
     private void injectionView(final Dialog dialog) {
@@ -423,6 +422,21 @@ public class AweMeHook extends BaseHook {
                             XposedHelpers.setLongField(
                                     shortVideoContext, mVersionConfig.fieldMaxDuration, limitTime);
                         }
+                    }
+                });
+
+        // 解除上传视频的时间限制
+        findMethod(mVersionConfig.classCutVideoActivity,
+                mVersionConfig.methodCutVideoTime)
+                .replace(new MethodHook.ReplaceCallback() {
+                    @Override
+                    public Object onReplace(XC_MethodHook.MethodHookParam param) {
+
+                        if (mUserConfigManager.isRemoveLimit()) {
+                            // 返回自定义时间
+                            return (int) (mUserConfigManager.getRecordVideoTime() / 1000);
+                        }
+                        return invokeOriginalMethod(param);
                     }
                 });
     }

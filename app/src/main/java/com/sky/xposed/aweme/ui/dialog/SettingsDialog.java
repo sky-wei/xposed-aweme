@@ -63,7 +63,7 @@ public class SettingsDialog extends BaseDialogFragment {
         sivAutoLike = ViewUtil.newSwitchItemView(getContext(), "自动点赞");
         sivAutoComment = ViewUtil.newSwitchItemView(getContext(), "自动评论");
         etiAutoCommentList = ViewUtil.newSimpleItemView(getContext(), "评论内容");
-        sivRemoveLimit = ViewUtil.newSwitchItemView(getContext(), "解除录制视频时间限制");
+        sivRemoveLimit = ViewUtil.newSwitchItemView(getContext(), "解除视频时间限制");
         sivMoreSettings = ViewUtil.newSimpleItemView(getContext(), "更多设置");
         sivDonate = ViewUtil.newSimpleItemView(getContext(), "支持我们");
         sivAbout = ViewUtil.newSimpleItemView(getContext(), "关于");

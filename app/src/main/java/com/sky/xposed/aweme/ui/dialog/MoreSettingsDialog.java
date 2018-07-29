@@ -41,7 +41,6 @@ public class MoreSettingsDialog extends BaseDialogFragment {
     private TitleView mToolbar;
     private CommonFrameLayout mCommonFrameLayout;
 
-    private EditTextItemView mAutoPlaySleepTime;
     private EditTextItemView mRecordVideoTime;
     private SwitchItemView sivRemoveAd;
 
@@ -54,21 +53,14 @@ public class MoreSettingsDialog extends BaseDialogFragment {
         mCommonFrameLayout = new CommonFrameLayout(getContext());
         mToolbar = mCommonFrameLayout.getTitleView();
 
-        mAutoPlaySleepTime = new EditTextItemView(getContext());
-        mAutoPlaySleepTime.setName("自动播放休眠时间");
-        mAutoPlaySleepTime.setExtendHint("未设置");
-        mAutoPlaySleepTime.setUnit("秒");
-        mAutoPlaySleepTime.setInputType(Constant.InputType.NUMBER_SIGNED);
-
         mRecordVideoTime = new EditTextItemView(getContext());
-        mRecordVideoTime.setName("录制视频最大限制时间");
+        mRecordVideoTime.setName("视频最大限制时间");
         mRecordVideoTime.setExtendHint("未设置");
         mRecordVideoTime.setUnit("秒");
         mRecordVideoTime.setInputType(Constant.InputType.NUMBER_SIGNED);
 
-        sivRemoveAd = ViewUtil.newSwitchItemView(getContext(), "移除推荐广告");
+        sivRemoveAd = ViewUtil.newSwitchItemView(getContext(), "移除列表广告");
 
-        mCommonFrameLayout.addContent(mAutoPlaySleepTime, true);
         mCommonFrameLayout.addContent(mRecordVideoTime);
         mCommonFrameLayout.addContent(sivRemoveAd);
 
@@ -80,8 +72,6 @@ public class MoreSettingsDialog extends BaseDialogFragment {
 
         mToolbar.setTitle("更多设置");
 
-        trackBind(mAutoPlaySleepTime, Constant.Preference.AUTO_PLAY_SLEEP_TIME,
-                Integer.toString(Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME), mStringChangeListener);
         trackBind(mRecordVideoTime, Constant.Preference.RECORD_VIDEO_TIME,
                 Integer.toString(Constant.DefaultValue.RECORD_VIDEO_TIME), mStringChangeListener);
         trackBind(sivRemoveAd, Constant.Preference.REMOVE_AD, false, mBooleanChangeListener);
@@ -93,15 +83,6 @@ public class MoreSettingsDialog extends BaseDialogFragment {
         public boolean onStatusChange(View view, String key, String value) {
 
             switch (key) {
-                case Constant.Preference.AUTO_PLAY_SLEEP_TIME:
-
-                    int sleepTime = ConversionUtil.parseInt(value);
-
-                    if (sleepTime <= 5) {
-                        VToast.show("设置的休眠数不能少于5秒，请重新设置");
-                        return false;
-                    }
-                    break;
                 case Constant.Preference.RECORD_VIDEO_TIME:
 
                     int recordTime = ConversionUtil.parseInt(value);
