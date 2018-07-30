@@ -101,7 +101,6 @@ public class VersionManager {
 
             fieldLimitTime = "t";
             fieldViewTagAweme = "f";
-            fieldShortVideoContext = "c";
         }
     }
 
@@ -125,7 +124,6 @@ public class VersionManager {
 
             fieldLimitTime = "t";
             fieldViewTagAweme = "f";
-            fieldShortVideoContext = "c";
         }
     }
 
@@ -162,7 +160,9 @@ public class VersionManager {
         /** CommentPublishModel */
         public String classCommentPublishModel = "com.ss.android.ugc.aweme.comment.d.g";
 
-        public String classFeedApi = "com.ss.android.ugc.aweme.feed.api.FeedApi";
+        public String classFeedApi = "com.ss.android.ugc.aweme.feed.f.g";
+
+        public String classFeedItemList = "com.ss.android.ugc.aweme.feed.model.FeedItemList";
 
         public String methodOnCreate = "onCreate";
 
@@ -219,7 +219,7 @@ public class VersionManager {
         public String fieldLimitTime = "b";
 
         /** boolean z2 = calculateRealTime > this.c.c.mMaxDuration; ShortVideoContext */
-        public String fieldShortVideoContext = "";
+        public String fieldShortVideoContext = "c";
 
         public String fieldMaxDuration = "mMaxDuration";
 
@@ -247,9 +247,5 @@ public class VersionManager {
         public String idLike1Layout = "a61";
 
         public String idLike2Layout = "a62";
-
-        public String nameDownload = "download";
-
-        public String nameCopy = "copy";
     }
 }

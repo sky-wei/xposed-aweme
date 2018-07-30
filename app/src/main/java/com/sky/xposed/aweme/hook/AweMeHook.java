@@ -260,35 +260,35 @@ public class AweMeHook extends BaseHook {
     private void removeAdHook() {
 
         // 移除推荐广告
-//        findMethod(mVersionConfig.classFeedApi, mVersionConfig.methodFeedList,
-//                int.class, long.class, long.class, int.class,
-//                Integer.class, String.class, int.class)
-//                .hook(new MethodHook.AfterCallback() {
-//                    @Override
-//                    public void onAfter(XC_MethodHook.MethodHookParam param) {
-//
-//                        if (mUserConfigManager.isRemoveAd()) {
-//                            // 移除广告
-//                            param.setResult(removeFeedAd(param.getResult()));
-//                        }
-//                    }
-//                });
+        findMethod(mVersionConfig.classFeedApi, mVersionConfig.methodFeedList,
+                mVersionConfig.classFeedItemList)
+                .hook(new MethodHook.BeforeCallback() {
+
+                    @Override
+                    public void onBefore(XC_MethodHook.MethodHookParam param) {
+
+                        if (mUserConfigManager.isRemoveAd()) {
+                            // 移除广告
+                            removeFeedAd(param.args[0]);
+                        }
+                    }
+                });
 
 
-//        findMethod(
-//                mVersionConfig.classSplashActivity,
-//                mVersionConfig.methodSplashOnResume)
-//                .hook(new MethodHook.AfterCallback() {
-//                    @Override
-//                    public void onAfter(XC_MethodHook.MethodHookParam param) {
-//
-//                        if (mUserConfigManager.isRemoveAd()) {
-//                            // 路过广告
-//                            XposedHelpers.callMethod(param.thisObject,
-//                                    mVersionConfig.methodSplashActivitySkip, new Bundle());
-//                        }
-//                    }
-//                });
+        findMethod(
+                mVersionConfig.classSplashActivity,
+                mVersionConfig.methodSplashOnResume)
+                .hook(new MethodHook.AfterCallback() {
+                    @Override
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
+
+                        if (mUserConfigManager.isRemoveAd()) {
+                            // 路过广告
+                            XposedHelpers.callMethod(param.thisObject,
+                                    mVersionConfig.methodSplashActivitySkip, new Bundle());
+                        }
+                    }
+                });
     }
 
     private void injectionView(final Dialog dialog) {
@@ -411,8 +411,7 @@ public class AweMeHook extends BaseHook {
                     @Override
                     public void onAfter(XC_MethodHook.MethodHookParam param) {
 
-                        if (mUserConfigManager.isRemoveLimit()
-                                && !TextUtils.isEmpty(mVersionConfig.fieldShortVideoContext)) {
+                        if (mUserConfigManager.isRemoveLimit()) {
 
                             long limitTime = mUserConfigManager.getRecordVideoTime();
 

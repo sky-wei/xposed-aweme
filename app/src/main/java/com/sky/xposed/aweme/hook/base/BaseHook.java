@@ -99,7 +99,8 @@ public abstract class BaseHook {
 
     public Object invokeOriginalMethod(XC_MethodHook.MethodHookParam param) {
         try {
-            XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
+            return XposedBridge.invokeOriginalMethod(
+                    param.method, param.thisObject, param.args);
         } catch (Throwable e) {
             Alog.d("异常了", e);
         }
