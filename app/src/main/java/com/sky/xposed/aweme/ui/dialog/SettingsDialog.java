@@ -133,7 +133,7 @@ public class SettingsDialog extends BaseDialogFragment {
         });
 
         // 附加功能
-        ExtUtil.init(getContext(), getDefaultSharedPreferences());
+//        ExtUtil.init(getContext(), getDefaultSharedPreferences());
     }
 
     private TrackViewStatus.StatusChangeListener<Boolean> mBooleanChangeListener = new TrackViewStatus.StatusChangeListener<Boolean>() {
