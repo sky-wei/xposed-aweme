@@ -29,6 +29,7 @@ import com.sky.xposed.aweme.ui.dialog.DonateDialog;
 import com.sky.xposed.aweme.ui.dialog.SettingsDialog;
 import com.sky.xposed.aweme.ui.util.CommUtil;
 import com.sky.xposed.aweme.ui.view.ItemMenu;
+import com.sky.xposed.aweme.util.DonateUtil;
 import com.sky.xposed.aweme.util.PackageUitl;
 import com.sky.xposed.aweme.util.VToast;
 
@@ -95,6 +96,10 @@ public class MainActivity extends Activity {
                 // 捐赠
                 DonateDialog donateDialog = new DonateDialog();
                 donateDialog.show(getFragmentManager(), "donate");
+                break;
+            case R.id.im_hb:
+                // 领取红包
+                DonateUtil.receiveAliPayHb(this);
                 break;
             case R.id.im_about:
                 CommUtil.showAboutDialog(this);

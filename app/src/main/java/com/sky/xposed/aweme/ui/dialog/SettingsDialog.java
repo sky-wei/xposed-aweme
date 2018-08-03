@@ -31,7 +31,7 @@ import com.sky.xposed.aweme.ui.view.CommonFrameLayout;
 import com.sky.xposed.aweme.ui.view.SimpleItemView;
 import com.sky.xposed.aweme.ui.view.SwitchItemView;
 import com.sky.xposed.aweme.ui.view.TitleView;
-import com.sky.xposed.aweme.util.ExtUtil;
+import com.sky.xposed.aweme.util.DonateUtil;
 
 public class SettingsDialog extends BaseDialogFragment {
 
@@ -47,6 +47,7 @@ public class SettingsDialog extends BaseDialogFragment {
     private SwitchItemView sivRemoveLimit;
     private SimpleItemView sivMoreSettings;
     private SimpleItemView sivDonate;
+    private SimpleItemView sivAliPayHb;
     private SimpleItemView sivAbout;
 
     @Override
@@ -66,6 +67,7 @@ public class SettingsDialog extends BaseDialogFragment {
         sivRemoveLimit = ViewUtil.newSwitchItemView(getContext(), "解除视频时间限制");
         sivMoreSettings = ViewUtil.newSimpleItemView(getContext(), "更多设置");
         sivDonate = ViewUtil.newSimpleItemView(getContext(), "支持我们");
+        sivAliPayHb = ViewUtil.newSimpleItemView(getContext(), "领取红包(每日一次)");
         sivAbout = ViewUtil.newSimpleItemView(getContext(), "关于");
 
         sivAutoSaveVideo = ViewUtil.newSwitchItemView(getContext(), "自动保存视频");
@@ -79,6 +81,7 @@ public class SettingsDialog extends BaseDialogFragment {
         mCommonFrameLayout.addContent(sivRemoveLimit, true);
         mCommonFrameLayout.addContent(sivMoreSettings, true);
         mCommonFrameLayout.addContent(sivDonate, true);
+        mCommonFrameLayout.addContent(sivAliPayHb, true);
         mCommonFrameLayout.addContent(sivAbout);
 
         return mCommonFrameLayout;
@@ -132,8 +135,13 @@ public class SettingsDialog extends BaseDialogFragment {
             }
         });
 
-        // 附加功能
-//        ExtUtil.init(getContext(), getDefaultSharedPreferences());
+        sivAliPayHb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 领取红包
+                DonateUtil.receiveAliPayHb(getContext());
+            }
+        });
     }
 
     private TrackViewStatus.StatusChangeListener<Boolean> mBooleanChangeListener = new TrackViewStatus.StatusChangeListener<Boolean>() {

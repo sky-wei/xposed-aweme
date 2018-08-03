@@ -18,7 +18,6 @@ package com.sky.xposed.aweme.ui.dialog;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -44,6 +43,7 @@ import com.sky.xposed.aweme.ui.view.SimpleItemView;
 import com.sky.xposed.aweme.ui.view.TitleView;
 import com.sky.xposed.aweme.util.Alog;
 import com.sky.xposed.aweme.util.DisplayUtil;
+import com.sky.xposed.aweme.util.DonateUtil;
 import com.sky.xposed.aweme.util.VToast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -54,8 +54,6 @@ import java.io.File;
  * Created by sky on 18-6-9.
  */
 public class DonateDialog extends BaseDialogFragment {
-
-    static final String ALI_PAY_URI = "alipayqr://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=";
 
     static final int CLICK = 0x01;
     static final int LONG_CLICK = 0x02;
@@ -101,7 +99,11 @@ public class DonateDialog extends BaseDialogFragment {
                             public boolean onEvent(int eventType, Uri uri) {
                                 // 直接拉起支付宝
                                 VToast.show("正在启动支付宝，感谢您的支持！");
-                                aliPayDonate();
+
+                                if (!DonateUtil.startAlipay(getContext(),
+                                        "HTTPS://QR.ALIPAY.COM/FKX05224Z5KOVCQ61BQ729")) {
+                                    VToast.show("启动支付宝失败");
+                                }
                                 return true;
                             }
                         });
@@ -152,29 +154,6 @@ public class DonateDialog extends BaseDialogFragment {
                         });
             }
         });
-    }
-
-    /**
-     * 启动支付宝捐赠
-     */
-    private void aliPayDonate() {
-
-        try {
-            Intent intent = new Intent("android.intent.action.VIEW");
-
-            String payUrl = "HTTPS://QR.ALIPAY.COM/FKX05224Z5KOVCQ61BQ729";
-            intent.setData(Uri.parse(ALI_PAY_URI + payUrl));
-
-            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                startActivity(intent);
-            } else {
-                intent.setData(Uri.parse(payUrl));
-                startActivity(intent);
-            }
-        } catch (Throwable tr) {
-            Alog.e("启动失败", tr);
-            VToast.show("启动支付宝失败");
-        }
     }
 
     private void showDonateImageDialog(String desc, final Uri uri,
@@ -238,6 +217,8 @@ public class DonateDialog extends BaseDialogFragment {
             Alog.e("异常了", tr);
         }
     }
+
+
 
     private interface OnEventListener {
 
