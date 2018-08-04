@@ -55,7 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -379,31 +378,6 @@ public class AweMeHook extends BaseHook {
     private void removeLimitHook() {
 
         findMethod(
-                mVersionConfig.classVideoRecordActivity,
-                mVersionConfig.methodOnCreate,
-                Bundle.class)
-                .hook(new MethodHook.AfterCallback() {
-                    @Override
-                    public void onAfter(XC_MethodHook.MethodHookParam param) {
-
-                        if (mUserConfigManager.isRemoveLimit()) {
-
-                            long limitTime = mUserConfigManager.getRecordVideoTime();
-
-                            // 重新设置限制时长
-                            XposedHelpers.setLongField(param.thisObject, mVersionConfig.fieldLimitTime, limitTime);
-
-                            // 重新设置进度条
-                            Object mProgressSegmentView = XposedHelpers
-                                    .getObjectField(param.thisObject, mVersionConfig.fieldMProgressSegmentView);
-                            XposedHelpers.callMethod(
-                                    mProgressSegmentView, mVersionConfig.methodSetMaxDuration, limitTime);
-                        }
-                    }
-                });
-
-
-        findMethod(
                 mVersionConfig.classVideoRecordNewActivity,
                 mVersionConfig.methodOnCreate,
                 Bundle.class)
@@ -434,6 +408,32 @@ public class AweMeHook extends BaseHook {
                         if (mUserConfigManager.isRemoveLimit()) {
                             // 返回自定义时间
                             return (int) (mUserConfigManager.getRecordVideoTime() / 1000);
+                        }
+                        return invokeOriginalMethod(param);
+                    }
+                });
+
+        if (TextUtils.isEmpty(mVersionConfig.classCutVideoUtil)) {
+            // 不需要处理
+            return ;
+        }
+
+        // 2.2.1新版本解除上传视频的时间限制
+        findMethod(
+                mVersionConfig.classCutVideoUtil,
+                mVersionConfig.methodCutVideoTime2,
+                long.class)
+                .replace(new MethodHook.ReplaceCallback() {
+                    @Override
+                    public Object onReplace(XC_MethodHook.MethodHookParam param) {
+
+                        if (mUserConfigManager.isRemoveLimit()) {
+
+                            long curTime = (long) param.args[0];
+                            long setTime = mUserConfigManager.getRecordVideoTime();
+
+                            // 返回自定义时间
+                            return curTime > setTime ? setTime : curTime;
                         }
                         return invokeOriginalMethod(param);
                     }

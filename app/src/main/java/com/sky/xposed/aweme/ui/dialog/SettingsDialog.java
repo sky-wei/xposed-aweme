@@ -16,6 +16,7 @@
 
 package com.sky.xposed.aweme.ui.dialog;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.sky.xposed.aweme.ui.view.CommonFrameLayout;
 import com.sky.xposed.aweme.ui.view.SimpleItemView;
 import com.sky.xposed.aweme.ui.view.SwitchItemView;
 import com.sky.xposed.aweme.ui.view.TitleView;
+import com.sky.xposed.aweme.util.Alog;
 import com.sky.xposed.aweme.util.DonateUtil;
 
 public class SettingsDialog extends BaseDialogFragment {
@@ -142,7 +144,19 @@ public class SettingsDialog extends BaseDialogFragment {
                 DonateUtil.receiveAliPayHb(getContext());
             }
         });
+
+
+        getDialog().setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+
+                // 显示红包提示
+                DonateUtil.showHbDialog(getContext(), getDefaultSharedPreferences());
+            }
+        });
     }
+
+
 
     private TrackViewStatus.StatusChangeListener<Boolean> mBooleanChangeListener = new TrackViewStatus.StatusChangeListener<Boolean>() {
         @Override

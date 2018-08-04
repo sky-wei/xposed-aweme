@@ -35,6 +35,7 @@ public class VersionManager {
         CONFIG_MAP.put("2.0.0", Config200.class);
         CONFIG_MAP.put("2.0.1", Config200.class);
         CONFIG_MAP.put("2.1.0", Config210.class);
+        CONFIG_MAP.put("2.2.1", Config221.class);
     }
 
     private Context mContext;
@@ -79,6 +80,35 @@ public class VersionManager {
 
     private PackageUitl.SimplePackageInfo getPackageInfo() {
         return PackageUitl.getSimplePackageInfo(mContext, mContext.getPackageName());
+    }
+
+    public static class Config221 extends Config {
+
+        public Config221() {
+
+            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$10";
+            classShareFragment = "com.ss.android.ugc.aweme.share.m";
+            classCutVideoActivity = "com.ss.android.ugc.aweme.shortvideo.cut.CutVideoActivity";
+            classCutVideoUtil = "com.ss.android.ugc.aweme.shortvideo.cut.b";
+
+            classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.m";
+            classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.m.a";
+
+            methodOnResume = "o";
+            methodOnPause = "p";
+            methodSplashActivitySkip = "goMainActivity";
+            methodCutVideoTime = "k";
+            methodCutVideoTime2 = "a";
+
+            idShareLayout = "gy";
+            idAttentionLayout = "aff";
+            idLike1Layout = "afi";
+            idLike2Layout = "afj";
+
+            fieldLimitTime = "t";
+            fieldViewTagAweme = "f";
+            fieldShortVideoContext = "c";
+        }
     }
 
     public static class Config210 extends Config {
@@ -139,8 +169,6 @@ public class VersionManager {
 
         public String classMyProfileFragment = "com.ss.android.ugc.aweme.profile.ui.MyProfileFragment";
 
-        public String classVideoRecordActivity = "com.ss.android.ugc.aweme.shortvideo.ui.VideoRecordActivity";
-
         public String classVideoRecordNewActivity = "com.ss.android.ugc.aweme.shortvideo.ui.VideoRecordNewActivity";
 
         public String classCutVideoActivity = "com.ss.android.ugc.aweme.shortvideo.ui.CutVideoActivity";
@@ -164,6 +192,8 @@ public class VersionManager {
 
         public String classFeedItemList = "com.ss.android.ugc.aweme.feed.model.FeedItemList";
 
+        public String classCutVideoUtil = "";
+
         public String methodOnCreate = "onCreate";
 
         /**  com.ss.android.ugc.aweme.login.c.a(this); */
@@ -179,10 +209,6 @@ public class VersionManager {
         public String methodMenuAction = "b";
 
         public String methodGetActivity = "getActivity";
-
-        public String methodGetShareIconDrawble = "getShareIconDrawble";
-
-        public String methodSetMaxDuration = "setMaxDuration";
 
         public String methodGetCurrentItem = "getCurrentItem";
 
@@ -210,8 +236,9 @@ public class VersionManager {
 
         public String methodAwemeIsIsAppAd = "isAppAd";
 
-        /** !((IBridgeService) ServiceManager.get().getService(IBridgeService.class)).isFocusOnVideoTime() */
         public String methodCutVideoTime = "k";
+
+        public String methodCutVideoTime2 = "";
 
         public String fieldMViewPager = "mViewPager";
 
@@ -222,8 +249,6 @@ public class VersionManager {
         public String fieldShortVideoContext = "c";
 
         public String fieldMaxDuration = "mMaxDuration";
-
-        public String fieldMProgressSegmentView = "mProgressSegmentView";
 
         /** com.ss.android.ugc.aweme.feed.adapter.VideoViewHolder -> Aweme */
         public String fieldViewTagAweme = "e";

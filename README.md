@@ -13,7 +13,7 @@
 1. 视频界面 -> 分享 -> 抖音助手
 
 ##### 支持的版本
-1. v2.0.2版本支持抖音(v2.0.0,v2.0.1,v2.1.0)
+1. v2.0.3版本支持抖音(v2.0.0,v2.0.1,v2.1.0,v2.2.1)
 
 #### Xposed Module Repository
 [http://repo.xposed.info/module/com.sky.xposed.aweme](http://repo.xposed.info/module/com.sky.xposed.aweme)
@@ -21,7 +21,8 @@
 
 QQ交流群: 
 1. __794327446__(已满) 
-2. __824933593__
+2. __824933593__(已满) 
+3. __592216812__
 
 声明：
 本项目为免费开源项目,仅供学习交流使用,如用于非法用途与作者无关。

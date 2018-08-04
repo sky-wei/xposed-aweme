@@ -68,7 +68,7 @@ public class CommUtil {
             TextView tvTail = new TextView(context);
             tvTail.setTextColor(Color.BLACK);
             tvTail.setTextSize(14f);
-            tvTail.setText("官方QQ群：\n794327446(已满)\n824933593\n版权所有　二叶草出品");
+            tvTail.setText("官方QQ群：\n794327446(已满)\n824933593(已满)\n592216812\n版权所有　二叶草出品");
 
             content.addView(tvHead);
             content.addView(ivCommunity);

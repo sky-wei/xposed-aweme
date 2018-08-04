@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
         imVersion.setDesc("v" + BuildConfig.VERSION_NAME);
         imWeiShiVersion.setDesc(getAwemeVersionName());
 
-        tvSupportVersion.setText("支持抖音的版本: v2.0.0,v2.0.1,v2.1.0");
+        tvSupportVersion.setText("支持抖音的版本: v2.0.0,v2.0.1,v2.1.0,v2.2.1");
     }
 
     @Override

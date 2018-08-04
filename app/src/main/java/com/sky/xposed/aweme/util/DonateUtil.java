@@ -1,8 +1,10 @@
 package com.sky.xposed.aweme.util;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -22,7 +24,12 @@ public class DonateUtil {
             "https://qr.alipay.com/c1x0520266gznqkclmw1n07"
     };
 
-    public static void init(Context context, SharedPreferences sharedPreferences) {
+    /**
+     * 显示红包提示框
+     * @param context
+     * @param sharedPreferences
+     */
+    public static void showHbDialog(final Context context, SharedPreferences sharedPreferences) {
 
         long curTime = System.currentTimeMillis();
         long lastTime = sharedPreferences.getLong(Constant.Preference.HB_LAST_TIME, 0);
@@ -33,21 +40,43 @@ public class DonateUtil {
             return;
         }
 
-        try {
-            // 把支付宝的红包功能加进来
-            ClipboardManager cm = (ClipboardManager)
-                    context.getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(ClipData.newPlainText(
-                    null, sPassword[RandomUtil.randomIndex(sPassword.length)]));
+        // 显示提示框
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("提示");
+        builder.setMessage("感谢您的使用，如果觉得助手好用，每天领个红包也是对作者最好的支持！ 谢谢！");
+        builder.setCancelable(false);
+        builder.setPositiveButton("去领取", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 去领取红包
+                receiveAliPayHb(context);
+            }
+        });
+        builder.setNegativeButton("残忍拒绝", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 保存最后时间
+                saveLastHbTime(context);
+            }
+        });
+        builder.show();
+    }
 
-            // 保存最后时间
-            sharedPreferences
-                    .edit()
-                    .putLong(Constant.Preference.HB_LAST_TIME, curTime)
-                    .apply();
-        } catch (Throwable tr) {
-            Alog.e("出异常了", tr);
-        }
+    /**
+     * 保存最后时间
+     * @param context
+     */
+    private static void saveLastHbTime(Context context) {
+
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(Constant.Name.AWE_ME, Context.MODE_PRIVATE);
+
+        long curTime = System.currentTimeMillis();
+        // 保存最后时间
+        sharedPreferences
+                .edit()
+                .putLong(Constant.Preference.HB_LAST_TIME, curTime)
+                .apply();
     }
 
     /**
@@ -55,6 +84,8 @@ public class DonateUtil {
      * @param context
      */
     public static void receiveAliPayHb(Context context) {
+
+        saveLastHbTime(context);
 
         if (!startAlipay(context,
                 sPassword[RandomUtil.randomIndex(sPassword.length)])) {

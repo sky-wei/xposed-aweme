@@ -6,8 +6,8 @@ android {
         applicationId "com.sky.xposed.aweme"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 33
-        versionName "2.0.2"
+        versionCode 34
+        versionName "2.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue 'string','app_name','xposed-aweme'
     }
