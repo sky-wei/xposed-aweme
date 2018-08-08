@@ -62,6 +62,10 @@ public class UserConfigManager {
         return getBoolean(Constant.Preference.REMOVE_AD);
     }
 
+    public boolean isDisableUpdate() {
+        return getBoolean(Constant.Preference.DISABLE_UPDATE);
+    }
+
     public boolean isCommentListEmpty() {
 
         Set<String> commentSet = mCachePreferences.getStringSet(

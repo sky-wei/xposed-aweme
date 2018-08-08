@@ -36,6 +36,7 @@ public class VersionManager {
         CONFIG_MAP.put("2.0.1", Config200.class);
         CONFIG_MAP.put("2.1.0", Config210.class);
         CONFIG_MAP.put("2.2.1", Config221.class);
+        CONFIG_MAP.put("2.3.0", Config230.class);
     }
 
     private Context mContext;
@@ -82,6 +83,37 @@ public class VersionManager {
         return PackageUitl.getSimplePackageInfo(mContext, mContext.getPackageName());
     }
 
+    public static class Config230 extends Config {
+
+        public Config230() {
+
+            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$10";
+            classShareFragment = "com.ss.android.ugc.aweme.share.m";
+            classCutVideoActivity = "com.ss.android.ugc.aweme.shortvideo.cut.CutVideoActivity";
+            classCutVideoUtil = "com.ss.android.ugc.aweme.shortvideo.cut.b";
+            classAppUpdate = "com.ss.android.common.update.g";
+
+            classMyProfileFragment = "";
+            classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.m";
+            classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.m.a";
+
+            methodOnResume = "i";
+            methodOnPause = "j";
+            methodSplashActivitySkip = "goMainActivity";
+            methodCutVideoTime = "k";
+            methodCutVideoTime2 = "a";
+
+            idShareLayout = "gs";
+            idAttentionLayout = "ah_";
+            idLike1Layout = "ahc";
+            idLike2Layout = "ahd";
+
+            fieldLimitTime = "t";
+            fieldViewTagAweme = "f";
+            fieldShortVideoContext = "c";
+        }
+    }
+
     public static class Config221 extends Config {
 
         public Config221() {
@@ -90,6 +122,7 @@ public class VersionManager {
             classShareFragment = "com.ss.android.ugc.aweme.share.m";
             classCutVideoActivity = "com.ss.android.ugc.aweme.shortvideo.cut.CutVideoActivity";
             classCutVideoUtil = "com.ss.android.ugc.aweme.shortvideo.cut.b";
+            classAppUpdate = "com.ss.android.common.update.g";
 
             classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.m";
             classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.m.a";
@@ -194,6 +227,8 @@ public class VersionManager {
 
         public String classCutVideoUtil = "";
 
+        public String classAppUpdate = "";
+
         public String methodOnCreate = "onCreate";
 
         /**  com.ss.android.ugc.aweme.login.c.a(this); */
@@ -239,6 +274,8 @@ public class VersionManager {
         public String methodCutVideoTime = "k";
 
         public String methodCutVideoTime2 = "";
+
+        public String methodAppUpdate = "v";
 
         public String fieldMViewPager = "mViewPager";
 

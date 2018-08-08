@@ -96,6 +96,9 @@ public class AweMeHook extends BaseHook {
 
         // 移除广告Hook
         removeAdHook();
+
+        // 更新Hook
+        updateHook();
     }
 
     public void onModifyValue(String key, Object value) {
@@ -193,6 +196,11 @@ public class AweMeHook extends BaseHook {
 
     private void settingsHook() {
 
+        if (TextUtils.isEmpty(mVersionConfig.classMyProfileFragment)) {
+            // 不需要处理，新版本不支持 2.3.0以后
+            return ;
+        }
+
         Class fragmentClass = findClass(mVersionConfig.classMyProfileFragment);
         Class adapterClass = findClass(mVersionConfig.classMenuAdapter);
         Class adapterDataClass = findClass(mVersionConfig.classMenuAdapterData);
@@ -286,6 +294,32 @@ public class AweMeHook extends BaseHook {
                             XposedHelpers.callMethod(param.thisObject,
                                     mVersionConfig.methodSplashActivitySkip, new Bundle());
                         }
+                    }
+                });
+    }
+
+    /**
+     * 更新的Hook
+     */
+    private void updateHook() {
+
+        if (TextUtils.isEmpty(mVersionConfig.classAppUpdate)) {
+            // 不需要处理，支持2.2.1以后
+            return ;
+        }
+
+        findMethod(
+                mVersionConfig.classAppUpdate,
+                mVersionConfig.methodAppUpdate)
+                .replace(new MethodHook.ReplaceCallback() {
+                    @Override
+                    public Object onReplace(XC_MethodHook.MethodHookParam param) {
+
+                        if (mUserConfigManager.isDisableUpdate()) {
+                            // 直接返回false,不需要更新
+                            return false;
+                        }
+                        return invokeOriginalMethod(param);
                     }
                 });
     }

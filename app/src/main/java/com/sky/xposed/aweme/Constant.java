@@ -52,6 +52,9 @@ public interface Constant {
         /** 移除广告 */
         String REMOVE_AD = "remove_ad";
 
+        /** 禁用更新 */
+        String DISABLE_UPDATE = "disable_update";
+
         /** 红包的最大时间 */
         String HB_LAST_TIME = "hb_last_time";
     }

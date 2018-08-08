@@ -16,6 +16,7 @@
 
 package com.sky.xposed.aweme.ui.dialog;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ public class MoreSettingsDialog extends BaseDialogFragment {
 
     private EditTextItemView mRecordVideoTime;
     private SwitchItemView sivRemoveAd;
+    private SwitchItemView sivDisableUpdate;
 
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container) {
@@ -59,10 +61,12 @@ public class MoreSettingsDialog extends BaseDialogFragment {
         mRecordVideoTime.setUnit("秒");
         mRecordVideoTime.setInputType(Constant.InputType.NUMBER_SIGNED);
 
-        sivRemoveAd = ViewUtil.newSwitchItemView(getContext(), "移除列表广告");
+        sivRemoveAd = ViewUtil.newSwitchItemView(getContext(), "移除抖音广告");
+        sivDisableUpdate = ViewUtil.newSwitchItemView(getContext(), "禁用抖音更新");
 
-        mCommonFrameLayout.addContent(mRecordVideoTime);
-        mCommonFrameLayout.addContent(sivRemoveAd);
+        mCommonFrameLayout.addContent(mRecordVideoTime, true);
+        mCommonFrameLayout.addContent(sivRemoveAd, true);
+        mCommonFrameLayout.addContent(sivDisableUpdate);
 
         return mCommonFrameLayout;
     }
@@ -75,6 +79,7 @@ public class MoreSettingsDialog extends BaseDialogFragment {
         trackBind(mRecordVideoTime, Constant.Preference.RECORD_VIDEO_TIME,
                 Integer.toString(Constant.DefaultValue.RECORD_VIDEO_TIME), mStringChangeListener);
         trackBind(sivRemoveAd, Constant.Preference.REMOVE_AD, false, mBooleanChangeListener);
+        trackBind(sivDisableUpdate, Constant.Preference.DISABLE_UPDATE, false, mBooleanChangeListener);
     }
 
     private TrackViewStatus.StatusChangeListener mStringChangeListener = new TrackViewStatus.StatusChangeListener<String>() {
@@ -105,6 +110,16 @@ public class MoreSettingsDialog extends BaseDialogFragment {
     private TrackViewStatus.StatusChangeListener<Boolean> mBooleanChangeListener = new TrackViewStatus.StatusChangeListener<Boolean>() {
         @Override
         public boolean onStatusChange(View view, String key, Boolean value) {
+
+            switch (key) {
+                case Constant.Preference.DISABLE_UPDATE:
+                    if (value) {
+                        // 清除更新数据(抖音自带的)
+                        SharedPreferences preferences = getSharedPreferences("update_info");
+                        preferences.edit().clear().apply();
+                    }
+                    break;
+            }
             sendRefreshPreferenceBroadcast(key, value);
             return true;
         }
