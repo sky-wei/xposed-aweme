@@ -20,7 +20,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.sky.xposed.aweme.hook.HookManager;
-import com.sky.xposed.aweme.util.Alog;
+import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.javax.MethodHook;
 import com.sky.xposed.javax.XposedPlus;
 

@@ -34,17 +34,17 @@ import android.widget.TextView;
 
 import com.sky.xposed.aweme.Constant;
 import com.sky.xposed.aweme.R;
-import com.sky.xposed.aweme.ui.base.BaseDialogFragment;
-import com.sky.xposed.aweme.ui.util.CommUtil;
-import com.sky.xposed.aweme.ui.util.LayoutUtil;
-import com.sky.xposed.aweme.ui.util.ViewUtil;
-import com.sky.xposed.aweme.ui.view.CommonFrameLayout;
-import com.sky.xposed.aweme.ui.view.SimpleItemView;
-import com.sky.xposed.aweme.ui.view.TitleView;
-import com.sky.xposed.aweme.util.Alog;
-import com.sky.xposed.aweme.util.DisplayUtil;
+import com.sky.xposed.aweme.ui.base.BaseDialog;
+import com.sky.xposed.aweme.ui.util.DialogUtil;
 import com.sky.xposed.aweme.util.DonateUtil;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.common.ui.util.LayoutUtil;
+import com.sky.xposed.common.ui.util.ViewUtil;
+import com.sky.xposed.common.ui.view.CommonFrameLayout;
+import com.sky.xposed.common.ui.view.SimpleItemView;
+import com.sky.xposed.common.ui.view.TitleView;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.DisplayUtil;
+import com.sky.xposed.common.util.ToastUtil;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -53,7 +53,7 @@ import java.io.File;
 /**
  * Created by sky on 18-6-9.
  */
-public class DonateDialog extends BaseDialogFragment {
+public class DonateDialog extends BaseDialog {
 
     static final int CLICK = 0x01;
     static final int LONG_CLICK = 0x02;
@@ -93,16 +93,16 @@ public class DonateDialog extends BaseDialogFragment {
                 // 启动支付宝
                 showDonateImageDialog(
                         "*点击支付二维码即可打开支付宝*",
-                        CommUtil.resourceIdToUri(R.drawable.alipay),
+                        DialogUtil.resourceIdToUri(R.drawable.alipay),
                         CLICK, new OnEventListener() {
                             @Override
                             public boolean onEvent(int eventType, Uri uri) {
                                 // 直接拉起支付宝
-                                VToast.show("正在启动支付宝，感谢您的支持！");
+                                ToastUtil.show("正在启动支付宝，感谢您的支持！");
 
                                 if (!DonateUtil.startAlipay(getContext(),
                                         "HTTPS://QR.ALIPAY.COM/FKX05224Z5KOVCQ61BQ729")) {
-                                    VToast.show("启动支付宝失败");
+                                    ToastUtil.show("启动支付宝失败");
                                 }
                                 return true;
                             }
@@ -117,7 +117,7 @@ public class DonateDialog extends BaseDialogFragment {
                 // 微信捐赠
                 showDonateImageDialog(
                         "*长按保存到相册,再通过微信扫码二维码*",
-                        CommUtil.resourceIdToUri(R.drawable.wechat),
+                        DialogUtil.resourceIdToUri(R.drawable.wechat),
                         LONG_CLICK, new OnEventListener() {
                             @Override
                             public boolean onEvent(int eventType, Uri uri) {
@@ -132,17 +132,17 @@ public class DonateDialog extends BaseDialogFragment {
                                                 .getExternalStorageDirectory(), "DCIM/wecaht.png");
 
                                         // 保存图片
-                                        if (CommUtil.saveImage2SDCard(imagePath.getPath(), bitmap)) {
-                                            CommUtil.scanFile(getContext(), imagePath.getPath());
-                                            VToast.show("图片已保存到本地，感谢您的支持！");
+                                        if (DialogUtil.saveImage2SDCard(imagePath.getPath(), bitmap)) {
+                                            DialogUtil.scanFile(getContext(), imagePath.getPath());
+                                            ToastUtil.show("图片已保存到本地，感谢您的支持！");
                                         } else {
-                                            VToast.show("图片保存失败！");
+                                            ToastUtil.show("图片保存失败！");
                                         }
                                     }
 
                                     @Override
                                     public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                                        VToast.show("保存图片失败");
+                                        ToastUtil.show("保存图片失败");
                                     }
 
                                     @Override
@@ -217,8 +217,6 @@ public class DonateDialog extends BaseDialogFragment {
             Alog.e("异常了", tr);
         }
     }
-
-
 
     private interface OnEventListener {
 

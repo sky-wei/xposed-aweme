@@ -22,13 +22,13 @@ import android.os.Handler;
 
 import com.sky.xposed.aweme.BuildConfig;
 import com.sky.xposed.aweme.Constant;
-import com.sky.xposed.aweme.data.CachePreferences;
-import com.sky.xposed.aweme.data.UserConfigManager;
 import com.sky.xposed.aweme.data.ObjectManager;
-import com.sky.xposed.aweme.helper.ReceiverHelper;
-import com.sky.xposed.aweme.util.Alog;
-import com.sky.xposed.aweme.util.Pair;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.aweme.data.UserConfigManager;
+import com.sky.xposed.common.data.CachePreferences;
+import com.sky.xposed.common.helper.ReceiverHelper;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.Pair;
+import com.sky.xposed.common.util.ToastUtil;
 import com.squareup.picasso.Picasso;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -67,7 +67,7 @@ public class HookManager implements ReceiverHelper.ReceiverCallback {
         }
 
         // 调试开关
-        Alog.sDEBUG = BuildConfig.DEBUG;
+        Alog.setDebug(BuildConfig.DEBUG);
 
         mContext = context;
         mHandler = new AppHandler();
@@ -77,9 +77,9 @@ public class HookManager implements ReceiverHelper.ReceiverCallback {
         mObjectManager = new ObjectManager();
         mVersionManager = new VersionManager(this);
         mReceiverHelper = new ReceiverHelper(context,
-                this, Constant.Action.REFRESH_PREFERENCE);
+                this, com.sky.xposed.common.Constant.Action.REFRESH_PREFERENCE);
 
-        VToast.getInstance().init(context);
+        ToastUtil.getInstance().init(context);
         Picasso.setSingletonInstance(new Picasso.Builder(context).build());
 
         // 添加统计
@@ -140,11 +140,11 @@ public class HookManager implements ReceiverHelper.ReceiverCallback {
     @Override
     public void onReceive(String action, Intent intent) {
 
-        if (Constant.Action.REFRESH_PREFERENCE.equals(action)) {
+        if (com.sky.xposed.common.Constant.Action.REFRESH_PREFERENCE.equals(action)) {
 
             // 获取刷新的值
             List<Pair<String, Object>> data = (ArrayList<Pair<String, Object>>)
-                    intent.getSerializableExtra(Constant.Key.DATA);
+                    intent.getSerializableExtra(com.sky.xposed.common.Constant.Key.DATA);
 
             if (data == null) return ;
 

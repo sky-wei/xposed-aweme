@@ -16,13 +16,4 @@
   -->
 
 <resources>
-
-    <declare-styleable name="ItemMenu">
-        <attr name="sky_itemMenuName" format="string" />
-        <attr name="sky_itemMenuDesc" format="string" />
-        <attr name="sky_itemMenuTextSize" format="dimension" />
-        <attr name="sky_itemMenuLine" format="boolean" />
-        <attr name="sky_itemMenuShowMore" format="boolean" />
-    </declare-styleable>
-
 </resources>

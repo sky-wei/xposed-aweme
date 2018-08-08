@@ -21,12 +21,11 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 
 import com.sky.xposed.aweme.hook.HookManager;
-import com.sky.xposed.aweme.ui.util.CommUtil;
-import com.sky.xposed.aweme.ui.util.PermissionUtil;
-import com.sky.xposed.aweme.util.Alog;
-import com.sky.xposed.aweme.util.MD5Util;
-import com.sky.xposed.aweme.util.RandomUtil;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.aweme.ui.util.DialogUtil;
+import com.sky.xposed.common.ui.util.PermissionUtil;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.RandomUtil;
+import com.sky.xposed.common.util.ToastUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
@@ -87,7 +86,7 @@ public class AutoDownloadHandler extends CommonHandler {
         if (PermissionUtil.checkSelfPermission(
                 mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            VToast.show("请先启用读写存储权限！");
+            ToastUtil.show("请先启用读写存储权限！");
             return;
         }
 
@@ -118,11 +117,11 @@ public class AutoDownloadHandler extends CommonHandler {
         File downloadFile = new File(mDownloadDir, fileName);
 
         if (downloadFile.exists()) {
-            VToast.show("视频文件本地已存在不需要下载！");
+            ToastUtil.show("视频文件本地已存在不需要下载！");
             return;
         }
 
-        VToast.show("开始下载当前视频");
+        ToastUtil.show("开始下载当前视频");
 
         OkHttpUtils
                 .get()
@@ -138,9 +137,9 @@ public class AutoDownloadHandler extends CommonHandler {
                     @Override
                     public void onResponse(File response, int id) {
                         Alog.e(TAG, "onResponse :" + response);
-                        VToast.show("视频下载完成：" + response.getPath());
+                        ToastUtil.show("视频下载完成：" + response.getPath());
 
-                        CommUtil.scanFile(mContext, response.getPath());
+                        DialogUtil.scanFile(mContext, response.getPath());
                     }
                 });
 

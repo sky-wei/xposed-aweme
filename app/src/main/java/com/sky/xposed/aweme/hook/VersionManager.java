@@ -18,8 +18,8 @@ package com.sky.xposed.aweme.hook;
 
 import android.content.Context;
 
-import com.sky.xposed.aweme.util.Alog;
-import com.sky.xposed.aweme.util.PackageUitl;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.PackageUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +48,7 @@ public class VersionManager {
 
     public boolean isSupportVersion() {
 
-        PackageUitl.SimplePackageInfo info = getPackageInfo();
+        PackageUtil.SimplePackageInfo info = getPackageInfo();
 
         if (info == null) return false;
 
@@ -57,7 +57,7 @@ public class VersionManager {
 
     public Config getSupportConfig() {
 
-        PackageUitl.SimplePackageInfo info = getPackageInfo();
+        PackageUtil.SimplePackageInfo info = getPackageInfo();
 
         if (info == null) return null;
 
@@ -73,14 +73,14 @@ public class VersionManager {
                 // 创建实例
                 mVersionConfig = vClass.newInstance();
             } catch (Throwable tr) {
-                Alog.d("创建版本配置异常", tr);
+                Alog.e("创建版本配置异常", tr);
             }
         }
         return mVersionConfig;
     }
 
-    private PackageUitl.SimplePackageInfo getPackageInfo() {
-        return PackageUitl.getSimplePackageInfo(mContext, mContext.getPackageName());
+    private PackageUtil.SimplePackageInfo getPackageInfo() {
+        return PackageUtil.getSimplePackageInfo(mContext, mContext.getPackageName());
     }
 
     public static class Config230 extends Config {

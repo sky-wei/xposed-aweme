@@ -42,12 +42,12 @@ import com.sky.xposed.aweme.hook.handler.AutoDownloadHandler;
 import com.sky.xposed.aweme.hook.handler.AutoLikeHandler;
 import com.sky.xposed.aweme.hook.handler.AutoPlayHandler;
 import com.sky.xposed.aweme.ui.dialog.SettingsDialog;
-import com.sky.xposed.aweme.ui.util.LayoutUtil;
-import com.sky.xposed.aweme.util.Alog;
-import com.sky.xposed.aweme.util.DisplayUtil;
-import com.sky.xposed.aweme.util.ResourceUtil;
 import com.sky.xposed.aweme.util.ToStringUtil;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.common.ui.util.LayoutUtil;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.DisplayUtil;
+import com.sky.xposed.common.util.ResourceUtil;
+import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.javax.MethodHook;
 import com.squareup.picasso.Picasso;
 
@@ -105,7 +105,7 @@ public class AweMeHook extends BaseHook {
 
         if (Constant.Preference.AUTO_PLAY.equals(key) && (boolean) value) {
             // 设置自动播放
-            VToast.show("播放完当前视频后将自动播放下一个视频！");
+            ToastUtil.show("播放完当前视频后将自动播放下一个视频！");
         }
     }
 
@@ -382,7 +382,8 @@ public class AweMeHook extends BaseHook {
 
         ImageView imageView = new ImageView(dialog.getContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Picasso.get().load(ResourceUtil.resourceIdToUri(imageRes)).into(imageView);
+        Picasso.get().load(ResourceUtil.resourceIdToUri(
+                BuildConfig.APPLICATION_ID, imageRes)).into(imageView);
 
         TextView textView = new TextView(dialog.getContext());
         textView.setText(desc);
@@ -497,7 +498,7 @@ public class AweMeHook extends BaseHook {
             XposedHelpers.setObjectField(feedList,
                     mVersionConfig.fieldFeedListItems, newItems);
         } catch (Throwable tr) {
-            Alog.d("移除广告异常", tr);
+            Alog.e("移除广告异常", tr);
         }
         return feedList;
     }

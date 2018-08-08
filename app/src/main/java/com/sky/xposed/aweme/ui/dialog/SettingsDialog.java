@@ -24,18 +24,17 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.sky.xposed.aweme.Constant;
-import com.sky.xposed.aweme.ui.base.BaseDialogFragment;
-import com.sky.xposed.aweme.ui.interfaces.TrackViewStatus;
-import com.sky.xposed.aweme.ui.util.CommUtil;
-import com.sky.xposed.aweme.ui.util.ViewUtil;
-import com.sky.xposed.aweme.ui.view.CommonFrameLayout;
-import com.sky.xposed.aweme.ui.view.SimpleItemView;
-import com.sky.xposed.aweme.ui.view.SwitchItemView;
-import com.sky.xposed.aweme.ui.view.TitleView;
-import com.sky.xposed.aweme.util.Alog;
+import com.sky.xposed.aweme.ui.base.BaseDialog;
+import com.sky.xposed.aweme.ui.util.DialogUtil;
 import com.sky.xposed.aweme.util.DonateUtil;
+import com.sky.xposed.common.ui.interfaces.TrackViewStatus;
+import com.sky.xposed.common.ui.util.ViewUtil;
+import com.sky.xposed.common.ui.view.CommonFrameLayout;
+import com.sky.xposed.common.ui.view.SimpleItemView;
+import com.sky.xposed.common.ui.view.SwitchItemView;
+import com.sky.xposed.common.ui.view.TitleView;
 
-public class SettingsDialog extends BaseDialogFragment {
+public class SettingsDialog extends BaseDialog {
 
     private TitleView mToolbar;
     private CommonFrameLayout mCommonFrameLayout;
@@ -106,7 +105,7 @@ public class SettingsDialog extends BaseDialogFragment {
             @Override
             public void onClick(View v) {
                 // 显示关于
-                CommUtil.showAboutDialog(getContext());
+                DialogUtil.showAboutDialog(getContext());
             }
         });
 

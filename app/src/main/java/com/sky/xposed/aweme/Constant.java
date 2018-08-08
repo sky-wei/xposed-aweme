@@ -59,38 +59,11 @@ public interface Constant {
         String HB_LAST_TIME = "hb_last_time";
     }
 
-    interface Action {
-
-        String REFRESH_PREFERENCE = BuildConfig.APPLICATION_ID + ".ACTION_REFRESH_PREFERENCE";
-    }
-
-    interface Key {
-
-        String DATA = "data";
-    }
-
     interface Name {
 
         String AWE_ME = "aweme";
 
         String TITLE = "抖音助手";
-    }
-
-    interface InputType {
-
-        int NUMBER = 0;
-
-        int NUMBER_SIGNED = 1;
-
-        int NUMBER_DECIMAL = 2;
-
-        int TEXT = 3;
-
-        int PHONE = 4;
-
-        int TEXT_PASSWORD = 5;
-
-        int NUMBER_PASSWORD = 6;
     }
 
     interface DefaultValue {

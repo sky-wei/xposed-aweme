@@ -20,13 +20,13 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.View;
 
-import com.sky.xposed.aweme.data.CachePreferences;
 import com.sky.xposed.aweme.data.ObjectManager;
 import com.sky.xposed.aweme.data.UserConfigManager;
 import com.sky.xposed.aweme.hook.HookManager;
 import com.sky.xposed.aweme.hook.VersionManager;
-import com.sky.xposed.aweme.util.Alog;
-import com.sky.xposed.aweme.util.ResourceUtil;
+import com.sky.xposed.common.data.CachePreferences;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.ResourceUtil;
 
 public abstract class BaseHandler implements Runnable {
 

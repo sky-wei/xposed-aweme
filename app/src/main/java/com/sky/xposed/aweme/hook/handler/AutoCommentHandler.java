@@ -17,9 +17,8 @@
 package com.sky.xposed.aweme.hook.handler;
 
 import com.sky.xposed.aweme.hook.HookManager;
-import com.sky.xposed.aweme.util.Alog;
-import com.sky.xposed.aweme.util.RandomUtil;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.common.util.RandomUtil;
+import com.sky.xposed.common.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +84,7 @@ public class AutoCommentHandler extends CommonHandler {
         }
 
         if (mUserConfigManager.isCommentListEmpty()) {
-            VToast.show("请先设置发送消息");
+            ToastUtil.show("请先设置发送消息");
             return false;
         }
         return true;

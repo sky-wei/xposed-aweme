@@ -1,8 +1,6 @@
 package com.sky.xposed.aweme.util;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +8,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 
 import com.sky.xposed.aweme.Constant;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.RandomUtil;
+import com.sky.xposed.common.util.ToastUtil;
 
 public class DonateUtil {
 
@@ -89,7 +90,7 @@ public class DonateUtil {
 
         if (!startAlipay(context,
                 sPassword[RandomUtil.randomIndex(sPassword.length)])) {
-            VToast.show("启动支付宝失败");
+            ToastUtil.show("启动支付宝失败");
         }
     }
 

@@ -29,8 +29,10 @@ import android.widget.TextView;
 
 import com.sky.xposed.aweme.BuildConfig;
 import com.sky.xposed.aweme.R;
-import com.sky.xposed.aweme.util.Alog;
-import com.sky.xposed.aweme.util.DisplayUtil;
+import com.sky.xposed.common.ui.util.LayoutUtil;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.DisplayUtil;
+import com.sky.xposed.common.util.ResourceUtil;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -40,7 +42,7 @@ import java.io.IOException;
 /**
  * Created by sky on 18-6-9.
  */
-public class CommUtil {
+public class DialogUtil {
 
     public static void showAboutDialog(Context context) {
 
@@ -91,11 +93,10 @@ public class CommUtil {
     }
 
     public static Uri resourceIdToUri(int resourceId) {
-        return Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + resourceId);
+        return ResourceUtil.resourceIdToUri(BuildConfig.APPLICATION_ID, resourceId);
     }
 
     public static void scanFile(Context context, String file) {
-
         Uri data = Uri.parse("file://" + file);
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, data));
     }

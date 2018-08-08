@@ -19,7 +19,7 @@ package com.sky.xposed.aweme.hook.handler;
 import android.view.View;
 
 import com.sky.xposed.aweme.hook.HookManager;
-import com.sky.xposed.aweme.util.RandomUtil;
+import com.sky.xposed.common.util.RandomUtil;
 
 public class AutoAttentionHandler extends CommonHandler {
 

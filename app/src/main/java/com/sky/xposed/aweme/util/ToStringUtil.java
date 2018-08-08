@@ -17,6 +17,7 @@
 package com.sky.xposed.aweme.util;
 
 
+import com.sky.xposed.common.util.Alog;
 
 /**
  * Created by sky on 18-3-27.

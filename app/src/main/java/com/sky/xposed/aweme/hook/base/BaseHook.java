@@ -19,12 +19,12 @@ package com.sky.xposed.aweme.hook.base;
 import android.app.ActivityThread;
 import android.content.Context;
 
-import com.sky.xposed.aweme.data.CachePreferences;
 import com.sky.xposed.aweme.data.ObjectManager;
 import com.sky.xposed.aweme.data.UserConfigManager;
 import com.sky.xposed.aweme.hook.HookManager;
 import com.sky.xposed.aweme.hook.VersionManager;
-import com.sky.xposed.aweme.util.Alog;
+import com.sky.xposed.common.data.CachePreferences;
+import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.javax.MethodHook;
 import com.sky.xposed.javax.XposedPlus;
 
@@ -102,7 +102,7 @@ public abstract class BaseHook {
             return XposedBridge.invokeOriginalMethod(
                     param.method, param.thisObject, param.args);
         } catch (Throwable e) {
-            Alog.d("异常了", e);
+            Alog.e("异常了", e);
         }
         return null;
     }

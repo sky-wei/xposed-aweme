@@ -27,11 +27,11 @@ import android.widget.TextView;
 
 import com.sky.xposed.aweme.ui.dialog.DonateDialog;
 import com.sky.xposed.aweme.ui.dialog.SettingsDialog;
-import com.sky.xposed.aweme.ui.util.CommUtil;
-import com.sky.xposed.aweme.ui.view.ItemMenu;
+import com.sky.xposed.aweme.ui.util.DialogUtil;
 import com.sky.xposed.aweme.util.DonateUtil;
-import com.sky.xposed.aweme.util.PackageUitl;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.common.ui.view.ItemMenu;
+import com.sky.xposed.common.util.PackageUtil;
+import com.sky.xposed.common.util.ToastUtil;
 
 /**
  * Created by sky on 18-6-9.
@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // 初始化
-        VToast.getInstance().init(getApplicationContext());
+        ToastUtil.getInstance().init(getApplicationContext());
 
         imVersion = findViewById(R.id.im_version);
         imWeiShiVersion = findViewById(R.id.im_aweme_version);
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
                 DonateUtil.receiveAliPayHb(this);
                 break;
             case R.id.im_about:
-                CommUtil.showAboutDialog(this);
+                DialogUtil.showAboutDialog(this);
                 break;
         }
     }
@@ -116,14 +116,14 @@ public class MainActivity extends Activity {
             // 调用系统浏览器打开
             startActivity(intent);
         } catch (Throwable tr) {
-            VToast.show("打开浏览器异常");
+            ToastUtil.show("打开浏览器异常");
         }
     }
 
     private String getAwemeVersionName() {
 
         // 获取微视版本名
-        PackageUitl.SimplePackageInfo info = PackageUitl
+        PackageUtil.SimplePackageInfo info = PackageUtil
                 .getSimplePackageInfo(this, Constant.AweMe.PACKAGE_NAME);
 
         return info == null ? "Unknown" : "v" + info.getVersionName();

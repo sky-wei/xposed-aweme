@@ -24,20 +24,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.sky.xposed.aweme.Constant;
-import com.sky.xposed.aweme.ui.base.BaseDialogFragment;
-import com.sky.xposed.aweme.ui.interfaces.TrackViewStatus;
-import com.sky.xposed.aweme.ui.util.ViewUtil;
-import com.sky.xposed.aweme.ui.view.CommonFrameLayout;
-import com.sky.xposed.aweme.ui.view.EditTextItemView;
-import com.sky.xposed.aweme.ui.view.SwitchItemView;
-import com.sky.xposed.aweme.ui.view.TitleView;
-import com.sky.xposed.aweme.util.ConversionUtil;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.aweme.ui.base.BaseDialog;
+import com.sky.xposed.common.ui.interfaces.TrackViewStatus;
+import com.sky.xposed.common.ui.util.ViewUtil;
+import com.sky.xposed.common.ui.view.CommonFrameLayout;
+import com.sky.xposed.common.ui.view.EditTextItemView;
+import com.sky.xposed.common.ui.view.SwitchItemView;
+import com.sky.xposed.common.ui.view.TitleView;
+import com.sky.xposed.common.util.ConversionUtil;
+import com.sky.xposed.common.util.ToastUtil;
 
 /**
  * Created by sky on 18-6-9.
  */
-public class MoreSettingsDialog extends BaseDialogFragment {
+public class MoreSettingsDialog extends BaseDialog {
 
     private TitleView mToolbar;
     private CommonFrameLayout mCommonFrameLayout;
@@ -59,7 +59,7 @@ public class MoreSettingsDialog extends BaseDialogFragment {
         mRecordVideoTime.setName("视频最大限制时间");
         mRecordVideoTime.setExtendHint("未设置");
         mRecordVideoTime.setUnit("秒");
-        mRecordVideoTime.setInputType(Constant.InputType.NUMBER_SIGNED);
+        mRecordVideoTime.setInputType(com.sky.xposed.common.Constant.InputType.NUMBER_SIGNED);
 
         sivRemoveAd = ViewUtil.newSwitchItemView(getContext(), "移除抖音广告");
         sivDisableUpdate = ViewUtil.newSwitchItemView(getContext(), "禁用抖音更新");
@@ -93,12 +93,12 @@ public class MoreSettingsDialog extends BaseDialogFragment {
                     int recordTime = ConversionUtil.parseInt(value);
 
                     if (recordTime <= 0) {
-                        VToast.show("设置的最大录制视频时间无效，请重新设置");
+                        ToastUtil.show("设置的最大录制视频时间无效，请重新设置");
                         return false;
                     }
 
                     if (recordTime > 60) {
-                        VToast.show("设置时间值过大，请慎重！");
+                        ToastUtil.show("设置时间值过大，请慎重！");
                     }
                     break;
             }

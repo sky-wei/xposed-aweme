@@ -19,8 +19,8 @@ package com.sky.xposed.aweme.hook.handler;
 import android.view.ViewGroup;
 
 import com.sky.xposed.aweme.hook.HookManager;
-import com.sky.xposed.aweme.util.RandomUtil;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.common.util.RandomUtil;
+import com.sky.xposed.common.util.ToastUtil;
 
 import de.robv.android.xposed.XposedHelpers;
 
@@ -63,7 +63,7 @@ public class AutoPlayHandler extends CommonHandler {
         if (!mViewPager.isShown()) {
             // 停止播放(界面不可见了)
             stopPlay();
-            VToast.show("界面切换，自动播放将暂停");
+            ToastUtil.show("界面切换，自动播放将暂停");
             return;
         }
 

@@ -18,7 +18,8 @@ package com.sky.xposed.aweme.data;
 
 import com.sky.xposed.aweme.Constant;
 import com.sky.xposed.aweme.hook.HookManager;
-import com.sky.xposed.aweme.util.ConversionUtil;
+import com.sky.xposed.common.data.CachePreferences;
+import com.sky.xposed.common.util.ConversionUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;

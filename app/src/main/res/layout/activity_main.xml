@@ -29,7 +29,7 @@
         android:orientation="vertical"
         android:layout_marginTop="20dp">
 
-        <com.sky.xposed.aweme.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_version"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -41,7 +41,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.aweme.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_aweme_version"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -53,7 +53,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.aweme.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_source"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -65,7 +65,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.aweme.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_download"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -77,7 +77,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.aweme.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_donate"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -89,7 +89,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.aweme.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_hb"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -101,7 +101,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.aweme.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_about"
             android:layout_width="match_parent"
             android:layout_height="45dp"

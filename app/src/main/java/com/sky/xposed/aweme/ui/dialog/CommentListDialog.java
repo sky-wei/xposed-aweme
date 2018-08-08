@@ -40,14 +40,14 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.sky.xposed.aweme.Constant;
-import com.sky.xposed.aweme.ui.adapter.CommentListAdapter;
-import com.sky.xposed.aweme.ui.base.BaseDialogFragment;
-import com.sky.xposed.aweme.ui.util.LayoutUtil;
-import com.sky.xposed.aweme.ui.util.ViewUtil;
-import com.sky.xposed.aweme.ui.view.CommonFrameLayout;
-import com.sky.xposed.aweme.ui.view.TitleView;
-import com.sky.xposed.aweme.util.DisplayUtil;
-import com.sky.xposed.aweme.util.VToast;
+import com.sky.xposed.aweme.ui.base.BaseDialog;
+import com.sky.xposed.common.ui.adapter.CommentListAdapter;
+import com.sky.xposed.common.ui.util.LayoutUtil;
+import com.sky.xposed.common.ui.util.ViewUtil;
+import com.sky.xposed.common.ui.view.CommonFrameLayout;
+import com.sky.xposed.common.ui.view.TitleView;
+import com.sky.xposed.common.util.DisplayUtil;
+import com.sky.xposed.common.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,7 +57,7 @@ import java.util.Set;
 /**
  * Created by sky on 18-6-9.
  */
-public class CommentListDialog extends BaseDialogFragment implements
+public class CommentListDialog extends BaseDialog implements
         SwipeMenuListView.OnMenuItemClickListener, AdapterView.OnItemClickListener {
 
     private TitleView mToolbar;
@@ -141,7 +141,7 @@ public class CommentListDialog extends BaseDialogFragment implements
 
                         if (TextUtils.isEmpty(value)) {
                             // 异常情况
-                            VToast.show("无法添加空评论!");
+                            ToastUtil.show("无法添加空评论!");
                         } else {
                             // 添加到列表中
                             mSaveCommentList = true;
@@ -182,7 +182,7 @@ public class CommentListDialog extends BaseDialogFragment implements
 
                 if (TextUtils.isEmpty(value)) {
                     // 异常情况
-                    VToast.show("编辑的评论不能为空!");
+                    ToastUtil.show("编辑的评论不能为空!");
                 } else {
                     // 添加到列表中
                     mSaveCommentList = true;
@@ -248,7 +248,7 @@ public class CommentListDialog extends BaseDialogFragment implements
         editText.setText(content);
         editText.setLayoutParams(LayoutUtil.newViewGroupParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ViewUtil.setInputType(editText, Constant.InputType.TEXT);
+        ViewUtil.setInputType(editText, com.sky.xposed.common.Constant.InputType.TEXT);
         frameLayout.addView(editText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
