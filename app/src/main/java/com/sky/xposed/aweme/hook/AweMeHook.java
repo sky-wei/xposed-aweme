@@ -66,6 +66,8 @@ public class AweMeHook extends BaseHook {
     private AutoCommentHandler mAutoCommentHandler;
     private AutoDownloadHandler mAutoDownloadHandler;
 
+    private XC_MethodHook.Unhook mCutVideoUnhook;
+
     private VersionManager.Config mVersionConfig = mVersionManager.getSupportConfig();
 
     @Override
@@ -448,29 +450,41 @@ public class AweMeHook extends BaseHook {
                     }
                 });
 
+
         if (TextUtils.isEmpty(mVersionConfig.classCutVideoUtil)) {
             // 不需要处理
             return ;
         }
 
-        // 2.2.1新版本解除上传视频的时间限制
-        findMethod(
-                mVersionConfig.classCutVideoUtil,
-                mVersionConfig.methodCutVideoTime2,
-                long.class)
-                .replace(new MethodHook.ReplaceCallback() {
+        // 兼容Vxp,所以必须延后Hook。不然会出异常
+        findMethod(mVersionConfig.classCutMultiVideo,
+                mVersionConfig.methodOnCreate, Bundle.class)
+                .hook(new MethodHook.BeforeCallback() {
                     @Override
-                    public Object onReplace(XC_MethodHook.MethodHookParam param) {
+                    public void onBefore(XC_MethodHook.MethodHookParam methodHookParam) {
 
-                        if (mUserConfigManager.isRemoveLimit()) {
+                        if (mCutVideoUnhook != null) return;
 
-                            long curTime = (long) param.args[0];
-                            long setTime = mUserConfigManager.getRecordVideoTime();
+                        // 2.2.1新版本解除上传视频的时间限制
+                        mCutVideoUnhook = findMethod(
+                                mVersionConfig.classCutVideoUtil,
+                                mVersionConfig.methodCutVideoTime2,
+                                long.class)
+                                .replace(new MethodHook.ReplaceCallback() {
+                                    @Override
+                                    public Object onReplace(XC_MethodHook.MethodHookParam param) {
 
-                            // 返回自定义时间
-                            return curTime > setTime ? setTime : curTime;
-                        }
-                        return invokeOriginalMethod(param);
+                                        if (mUserConfigManager.isRemoveLimit()) {
+
+                                            long curTime = (long) param.args[0];
+                                            long setTime = mUserConfigManager.getRecordVideoTime();
+
+                                            // 返回自定义时间
+                                            return curTime > setTime ? setTime : curTime;
+                                        }
+                                        return invokeOriginalMethod(param);
+                                    }
+                                });
                     }
                 });
     }

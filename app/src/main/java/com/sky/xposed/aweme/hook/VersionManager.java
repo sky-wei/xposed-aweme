@@ -229,6 +229,8 @@ public class VersionManager {
 
         public String classAppUpdate = "";
 
+        public String classCutMultiVideo = "com.ss.android.ugc.aweme.shortvideo.cut.CutMultiVideoActivity";
+
         public String methodOnCreate = "onCreate";
 
         /**  com.ss.android.ugc.aweme.login.c.a(this); */
