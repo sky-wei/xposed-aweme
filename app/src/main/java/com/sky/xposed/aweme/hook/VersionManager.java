@@ -37,6 +37,7 @@ public class VersionManager {
         CONFIG_MAP.put("2.1.0", Config210.class);
         CONFIG_MAP.put("2.2.1", Config221.class);
         CONFIG_MAP.put("2.3.0", Config230.class);
+        CONFIG_MAP.put("2.4.0", Config240.class);
     }
 
     private Context mContext;
@@ -81,6 +82,37 @@ public class VersionManager {
 
     private PackageUtil.SimplePackageInfo getPackageInfo() {
         return PackageUtil.getSimplePackageInfo(mContext, mContext.getPackageName());
+    }
+
+    public static class Config240 extends Config {
+
+        public Config240() {
+
+            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$12";
+            classShareFragment = "com.ss.android.ugc.aweme.share.m";
+            classCutVideoActivity = "com.ss.android.ugc.aweme.shortvideo.cut.CutVideoActivity";
+            classCutVideoUtil = "com.ss.android.ugc.aweme.shortvideo.cut.b";
+            classAppUpdate = "com.ss.android.common.update.g";
+
+            classMyProfileFragment = "";
+            classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.m";
+            classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.m.a";
+
+            methodOnResume = "i";
+            methodOnPause = "j";
+            methodSplashActivitySkip = "goMainActivity";
+            methodCutVideoTime = "k";
+            methodCutVideoTime2 = "a";
+
+            idShareLayout = "gv";
+            idAttentionLayout = "aji";
+            idLike1Layout = "ajl";
+            idLike2Layout = "ajm";
+
+            fieldLimitTime = "t";
+            fieldViewTagAweme = "e";
+            fieldShortVideoContext = "c";
+        }
     }
 
     public static class Config230 extends Config {
