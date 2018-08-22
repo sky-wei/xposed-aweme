@@ -16,7 +16,6 @@
 
 package com.sky.xposed.aweme.ui.dialog;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,27 +23,26 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.sky.xposed.aweme.Constant;
+import com.sky.xposed.aweme.R;
 import com.sky.xposed.aweme.ui.base.BaseDialog;
+import com.sky.xposed.aweme.ui.util.UriUtil;
 import com.sky.xposed.common.ui.interfaces.TrackViewStatus;
-import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.common.ui.view.CommonFrameLayout;
 import com.sky.xposed.common.ui.view.EditTextItemView;
-import com.sky.xposed.common.ui.view.SwitchItemView;
 import com.sky.xposed.common.ui.view.TitleView;
 import com.sky.xposed.common.util.ConversionUtil;
 import com.sky.xposed.common.util.ToastUtil;
+import com.squareup.picasso.Picasso;
 
 /**
- * Created by sky on 18-6-9.
+ * Created by sky on 2018/8/22.
  */
-public class MoreSettingsDialog extends BaseDialog {
+public class LimitDialog extends BaseDialog implements TitleView.OnBackEventListener {
 
     private TitleView mToolbar;
     private CommonFrameLayout mCommonFrameLayout;
 
     private EditTextItemView mRecordVideoTime;
-    private SwitchItemView sivRemoveAd;
-    private SwitchItemView sivDisableUpdate;
 
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container) {
@@ -61,12 +59,7 @@ public class MoreSettingsDialog extends BaseDialog {
         mRecordVideoTime.setUnit("秒");
         mRecordVideoTime.setInputType(com.sky.xposed.common.Constant.InputType.NUMBER_SIGNED);
 
-        sivRemoveAd = ViewUtil.newSwitchItemView(getContext(), "移除抖音广告");
-        sivDisableUpdate = ViewUtil.newSwitchItemView(getContext(), "禁用抖音更新");
-
-        mCommonFrameLayout.addContent(mRecordVideoTime, true);
-        mCommonFrameLayout.addContent(sivRemoveAd, true);
-        mCommonFrameLayout.addContent(sivDisableUpdate);
+        mCommonFrameLayout.addContent(mRecordVideoTime);
 
         return mCommonFrameLayout;
     }
@@ -74,12 +67,23 @@ public class MoreSettingsDialog extends BaseDialog {
     @Override
     protected void initView(View view, Bundle args) {
 
-        mToolbar.setTitle("更多设置");
+        mToolbar.setTitle("时间设置");
+        mToolbar.showBack();
+        mToolbar.setOnBackEventListener(this);
+
+        // 设置图标
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_clear))
+                .into(mToolbar.getBackView());
 
         trackBind(mRecordVideoTime, Constant.Preference.RECORD_VIDEO_TIME,
                 Integer.toString(Constant.DefaultValue.RECORD_VIDEO_TIME), mStringChangeListener);
-        trackBind(sivRemoveAd, Constant.Preference.REMOVE_AD, false, mBooleanChangeListener);
-        trackBind(sivDisableUpdate, Constant.Preference.DISABLE_UPDATE, false, mBooleanChangeListener);
+    }
+
+    @Override
+    public void onEvent(View view) {
+        // 退出
+        dismiss();
     }
 
     private TrackViewStatus.StatusChangeListener mStringChangeListener = new TrackViewStatus.StatusChangeListener<String>() {
@@ -97,26 +101,8 @@ public class MoreSettingsDialog extends BaseDialog {
                         return false;
                     }
 
-                    if (recordTime > 60) {
+                    if (recordTime > 59) {
                         ToastUtil.show("设置时间值过大，请慎重！");
-                    }
-                    break;
-            }
-            sendRefreshPreferenceBroadcast(key, value);
-            return true;
-        }
-    };
-
-    private TrackViewStatus.StatusChangeListener<Boolean> mBooleanChangeListener = new TrackViewStatus.StatusChangeListener<Boolean>() {
-        @Override
-        public boolean onStatusChange(View view, String key, Boolean value) {
-
-            switch (key) {
-                case Constant.Preference.DISABLE_UPDATE:
-                    if (value) {
-                        // 清除更新数据(抖音自带的)
-                        SharedPreferences preferences = getSharedPreferences("update_info");
-                        preferences.edit().clear().apply();
                     }
                     break;
             }

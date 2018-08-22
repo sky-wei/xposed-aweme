@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -32,7 +34,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -40,7 +44,9 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.sky.xposed.aweme.Constant;
+import com.sky.xposed.aweme.R;
 import com.sky.xposed.aweme.ui.base.BaseDialog;
+import com.sky.xposed.aweme.ui.util.UriUtil;
 import com.sky.xposed.common.ui.adapter.CommentListAdapter;
 import com.sky.xposed.common.ui.util.LayoutUtil;
 import com.sky.xposed.common.ui.util.ViewUtil;
@@ -48,6 +54,7 @@ import com.sky.xposed.common.ui.view.CommonFrameLayout;
 import com.sky.xposed.common.ui.view.TitleView;
 import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.common.util.ToastUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -58,11 +65,13 @@ import java.util.Set;
  * Created by sky on 18-6-9.
  */
 public class CommentListDialog extends BaseDialog implements
-        SwipeMenuListView.OnMenuItemClickListener, AdapterView.OnItemClickListener {
+        SwipeMenuListView.OnMenuItemClickListener, AdapterView.OnItemClickListener,
+        TitleView.OnBackEventListener, View.OnClickListener {
 
     private TitleView mToolbar;
     private CommonFrameLayout mCommonFrameLayout;
     private Button mAddCommonButton;
+    private ImageButton mMoreButton;
     private SwipeMenuListView mSwipeMenuListView;
 
     private CommentListAdapter mCommentListAdapter;
@@ -77,6 +86,7 @@ public class CommentListDialog extends BaseDialog implements
 
         mCommonFrameLayout = new CommonFrameLayout(getContext());
         mToolbar = mCommonFrameLayout.getTitleView();
+        mMoreButton = mToolbar.addMoreImageButton();
 
         LinearLayout layout = LayoutUtil.newCommonLayout(getContext());
 
@@ -126,6 +136,16 @@ public class CommentListDialog extends BaseDialog implements
     protected void initView(View view, Bundle args) {
 
         mToolbar.setTitle("评论内容列表");
+        mToolbar.showBack();
+        mToolbar.setOnBackEventListener(this);
+
+        // 设置图标
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_clear))
+                .into(mToolbar.getBackView());
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_more_vert))
+                .into(mMoreButton);
 
         mCommentListAdapter = new CommentListAdapter(getContext());
         mCommentListAdapter.setItems(mCommentList);
@@ -153,6 +173,7 @@ public class CommentListDialog extends BaseDialog implements
             }
         });
 
+        mMoreButton.setOnClickListener(this);
         mSwipeMenuListView.setOnItemClickListener(this);
         mSwipeMenuListView.setOnMenuItemClickListener(this);
         mSwipeMenuListView.setAdapter(mCommentListAdapter);
@@ -161,6 +182,21 @@ public class CommentListDialog extends BaseDialog implements
         mCommentList.clear();
         mCommentList.addAll(loadUserComment());
         mCommentListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (mMoreButton == v) {
+            // 显示更多菜单
+            showMoreMenu();
+        }
+    }
+
+    @Override
+    public void onEvent(View view) {
+        // 退出
+        dismiss();
     }
 
     @Override
@@ -202,6 +238,30 @@ public class CommentListDialog extends BaseDialog implements
         mCommentListAdapter.notifyDataSetChanged();
 
         return true;
+    }
+
+    /**
+     * 显示更多菜单
+     */
+    private void showMoreMenu() {
+
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), mMoreButton, Gravity.RIGHT);
+        Menu menu = popupMenu.getMenu();
+
+        menu.add(1, 1, 1, "清除所有");
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 删除指定评论
+                mSaveCommentList = true;
+                mCommentList.clear();
+                mCommentListAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
+        popupMenu.show();
     }
 
     /**

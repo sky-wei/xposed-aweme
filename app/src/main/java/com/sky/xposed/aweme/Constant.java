@@ -57,6 +57,15 @@ public interface Constant {
 
         /** 红包的最大时间 */
         String HB_LAST_TIME = "hb_last_time";
+
+        /** 自动播放休眠时间 */
+        String AUTO_PLAY_SLEEP_TIME = "auto_play_sleep_time";
+
+        /** 播放的类型 */
+        String AUTO_PLAY_TYPE_NAME = "auto_play_type_name";
+
+        /** 播放的类型 */
+        String AUTO_PLAY_TYPE = "auto_play_type";
     }
 
     interface Name {
@@ -70,12 +79,19 @@ public interface Constant {
 
         int AUTO_PLAY_SLEEP_TIME = 15;   // 单位:秒
 
-        int RECORD_VIDEO_TIME = 60;    // 单位:秒
+        int RECORD_VIDEO_TIME = 59;    // 单位:秒
     }
 
     interface Time {
 
         /** 红包最大间隔时间 */
         int HB_MAX_TIME = 1000 * 60 * 60 * 24;
+    }
+
+    interface PlayType {
+
+        int TDEFAULT = 0x00;
+
+        int TIMING = 0x01;
     }
 }

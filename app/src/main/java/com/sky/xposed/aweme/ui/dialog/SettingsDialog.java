@@ -18,14 +18,21 @@ package com.sky.xposed.aweme.ui.dialog;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import com.sky.xposed.aweme.Constant;
+import com.sky.xposed.aweme.R;
 import com.sky.xposed.aweme.ui.base.BaseDialog;
 import com.sky.xposed.aweme.ui.util.DialogUtil;
+import com.sky.xposed.aweme.ui.util.UriUtil;
 import com.sky.xposed.aweme.util.DonateUtil;
 import com.sky.xposed.common.ui.interfaces.TrackViewStatus;
 import com.sky.xposed.common.ui.util.ViewUtil;
@@ -33,23 +40,26 @@ import com.sky.xposed.common.ui.view.CommonFrameLayout;
 import com.sky.xposed.common.ui.view.SimpleItemView;
 import com.sky.xposed.common.ui.view.SwitchItemView;
 import com.sky.xposed.common.ui.view.TitleView;
+import com.squareup.picasso.Picasso;
 
-public class SettingsDialog extends BaseDialog {
+public class SettingsDialog extends BaseDialog implements View.OnClickListener {
 
     private TitleView mToolbar;
     private CommonFrameLayout mCommonFrameLayout;
+    private ImageButton mMoreButton;
 
     private SwitchItemView sivAutoPlay;
+    private SimpleItemView sivAutoPlaySettings;
     private SwitchItemView sivAutoAttention;
     private SwitchItemView sivAutoLike;
     private SwitchItemView sivAutoComment;
     private SimpleItemView etiAutoCommentList;
     private SwitchItemView sivAutoSaveVideo;
     private SwitchItemView sivRemoveLimit;
+    private SimpleItemView sivRemoveLimitSettings;
     private SimpleItemView sivMoreSettings;
     private SimpleItemView sivDonate;
     private SimpleItemView sivAliPayHb;
-    private SimpleItemView sivAbout;
 
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container) {
@@ -59,31 +69,33 @@ public class SettingsDialog extends BaseDialog {
 
         mCommonFrameLayout = new CommonFrameLayout(getContext());
         mToolbar = mCommonFrameLayout.getTitleView();
+        mMoreButton = mToolbar.addMoreImageButton();
 
-        sivAutoPlay = ViewUtil.newSwitchItemView(getContext(), "自动播放");
-        sivAutoAttention = ViewUtil.newSwitchItemView(getContext(), "自动关注");
-        sivAutoLike = ViewUtil.newSwitchItemView(getContext(), "自动点赞");
-        sivAutoComment = ViewUtil.newSwitchItemView(getContext(), "自动评论");
+        sivAutoPlay = ViewUtil.newSwitchItemView(getContext(), "自动播放", "提供两种播放形式");
+        sivAutoPlaySettings = ViewUtil.newSimpleItemView(getContext(), "播放设置");
+        sivAutoAttention = ViewUtil.newSwitchItemView(getContext(), "自动关注", "切换视频时自动关注");
+        sivAutoLike = ViewUtil.newSwitchItemView(getContext(), "自动点赞", "切换视频时自动点赞");
+        sivAutoComment = ViewUtil.newSwitchItemView(getContext(), "自动评论", "切换视频时自动评论");
         etiAutoCommentList = ViewUtil.newSimpleItemView(getContext(), "评论内容");
-        sivRemoveLimit = ViewUtil.newSwitchItemView(getContext(), "解除视频时间限制");
-        sivMoreSettings = ViewUtil.newSimpleItemView(getContext(), "更多设置");
+        sivAutoSaveVideo = ViewUtil.newSwitchItemView(getContext(), "自动保存视频", "切换视频时自动保存视频");
+        sivRemoveLimit = ViewUtil.newSwitchItemView(getContext(), "解除视频限制", "解除上传与录制15秒限制");
+        sivRemoveLimitSettings = ViewUtil.newSimpleItemView(getContext(), "视频时间设置");
+        sivMoreSettings = ViewUtil.newSimpleItemView(getContext(), "其他设置");
         sivDonate = ViewUtil.newSimpleItemView(getContext(), "支持我们");
         sivAliPayHb = ViewUtil.newSimpleItemView(getContext(), "领取红包(每日一次)");
-        sivAbout = ViewUtil.newSimpleItemView(getContext(), "关于");
 
-        sivAutoSaveVideo = ViewUtil.newSwitchItemView(getContext(), "自动保存视频");
-
-        mCommonFrameLayout.addContent(sivAutoPlay, true);
-        mCommonFrameLayout.addContent(sivAutoAttention, true);
-        mCommonFrameLayout.addContent(sivAutoLike, true);
-        mCommonFrameLayout.addContent(sivAutoComment, true);
-        mCommonFrameLayout.addContent(etiAutoCommentList, true);
-        mCommonFrameLayout.addContent(sivAutoSaveVideo, true);
-        mCommonFrameLayout.addContent(sivRemoveLimit, true);
-        mCommonFrameLayout.addContent(sivMoreSettings, true);
-        mCommonFrameLayout.addContent(sivDonate, true);
-        mCommonFrameLayout.addContent(sivAliPayHb, true);
-        mCommonFrameLayout.addContent(sivAbout);
+        mCommonFrameLayout.addContent(sivAutoPlay);
+        mCommonFrameLayout.addContent(sivAutoPlaySettings);
+        mCommonFrameLayout.addContent(sivAutoAttention);
+        mCommonFrameLayout.addContent(sivAutoLike);
+        mCommonFrameLayout.addContent(sivAutoComment);
+        mCommonFrameLayout.addContent(etiAutoCommentList);
+        mCommonFrameLayout.addContent(sivAutoSaveVideo);
+        mCommonFrameLayout.addContent(sivRemoveLimit);
+        mCommonFrameLayout.addContent(sivRemoveLimitSettings);
+        mCommonFrameLayout.addContent(sivMoreSettings);
+        mCommonFrameLayout.addContent(sivDonate);
+        mCommonFrameLayout.addContent(sivAliPayHb);
 
         return mCommonFrameLayout;
     }
@@ -93,57 +105,34 @@ public class SettingsDialog extends BaseDialog {
 
         mToolbar.setTitle(Constant.Name.TITLE);
 
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_more_vert))
+                .into(mMoreButton);
+
         // 绑定事件
-        trackBind(sivAutoPlay, Constant.Preference.AUTO_PLAY, false, mBooleanChangeListener);
+        boolean autoPlay = trackBind(sivAutoPlay,
+                Constant.Preference.AUTO_PLAY, false, mBooleanChangeListener);
         trackBind(sivAutoAttention, Constant.Preference.AUTO_ATTENTION, false, mBooleanChangeListener);
         trackBind(sivAutoLike, Constant.Preference.AUTO_LIKE, false, mBooleanChangeListener);
-        trackBind(sivAutoComment, Constant.Preference.AUTO_COMMENT, false, mBooleanChangeListener);
+        boolean autoComment = trackBind(sivAutoComment,
+                Constant.Preference.AUTO_COMMENT, false, mBooleanChangeListener);
         trackBind(sivAutoSaveVideo, Constant.Preference.AUTO_SAVE_VIDEO, false, mBooleanChangeListener);
-        trackBind(sivRemoveLimit, Constant.Preference.REMOVE_LIMIT, false, mBooleanChangeListener);
+        boolean removeLimit = trackBind(sivRemoveLimit,
+                Constant.Preference.REMOVE_LIMIT, false, mBooleanChangeListener);
 
-        sivAbout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 显示关于
-                DialogUtil.showAboutDialog(getContext());
-            }
-        });
+        // 设置显示或隐藏
+        ViewUtil.setVisibility(sivAutoPlaySettings, autoPlay ? View.VISIBLE : View.GONE);
+        ViewUtil.setVisibility(etiAutoCommentList, autoComment ? View.VISIBLE : View.GONE);
+        ViewUtil.setVisibility(sivRemoveLimitSettings, removeLimit ? View.VISIBLE : View.GONE);
 
-        etiAutoCommentList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 显示评论列表
-                CommentListDialog commonListDialog = new CommentListDialog();
-                commonListDialog.show(getFragmentManager(), "commonList");
-            }
-        });
-
-        sivMoreSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 更多设置
-                MoreSettingsDialog moreSettingsDialog = new MoreSettingsDialog();
-                moreSettingsDialog.show(getFragmentManager(), "moreSettings");
-            }
-        });
-
-        sivDonate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 捐赠
-                DonateDialog donateDialog = new DonateDialog();
-                donateDialog.show(getFragmentManager(), "donate");
-            }
-        });
-
-        sivAliPayHb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 领取红包
-                DonateUtil.receiveAliPayHb(getContext());
-            }
-        });
-
+        // 添加事件监听
+        mMoreButton.setOnClickListener(this);
+        sivAutoPlaySettings.setOnClickListener(this);
+        etiAutoCommentList.setOnClickListener(this);
+        sivMoreSettings.setOnClickListener(this);
+        sivRemoveLimitSettings.setOnClickListener(this);
+        sivDonate.setOnClickListener(this);
+        sivAliPayHb.setOnClickListener(this);
 
         getDialog().setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -155,11 +144,74 @@ public class SettingsDialog extends BaseDialog {
         });
     }
 
+    @Override
+    public void onClick(View v) {
 
+        if (mMoreButton == v) {
+            // 显示更多菜单
+            showMoreMenu();
+        } else if (sivAutoPlaySettings == v) {
+            // 自动播放设置
+            PlayDialog playDialog = new PlayDialog();
+            playDialog.show(getFragmentManager(), "playDialog");
+        } else if (etiAutoCommentList == v) {
+            // 显示评论列表
+            CommentListDialog commonListDialog = new CommentListDialog();
+            commonListDialog.show(getFragmentManager(), "commonList");
+        } else if (sivMoreSettings == v) {
+            // 更多设置
+            OtherDialog moreSettingsDialog = new OtherDialog();
+            moreSettingsDialog.show(getFragmentManager(), "otherSettings");
+        } else if (sivDonate == v) {
+            // 捐赠
+            DonateDialog donateDialog = new DonateDialog();
+            donateDialog.show(getFragmentManager(), "donate");
+        } else if (sivAliPayHb == v) {
+            // 领取红包
+            DonateUtil.receiveAliPayHb(getContext());
+        } else if (sivRemoveLimitSettings == v) {
+            // 视频设置
+            LimitDialog limitSettingsDialog = new LimitDialog();
+            limitSettingsDialog.show(getFragmentManager(), "limitSettings");
+        }
+    }
+
+    /**
+     * 显示更多菜单
+     */
+    private void showMoreMenu() {
+
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), mMoreButton, Gravity.RIGHT);
+        Menu menu = popupMenu.getMenu();
+
+        menu.add(1, 1, 1, "关于");
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 显示关于
+                DialogUtil.showAboutDialog(getContext());
+                return true;
+            }
+        });
+
+        popupMenu.show();
+    }
 
     private TrackViewStatus.StatusChangeListener<Boolean> mBooleanChangeListener = new TrackViewStatus.StatusChangeListener<Boolean>() {
         @Override
         public boolean onStatusChange(View view, String key, Boolean value) {
+
+            if (Constant.Preference.AUTO_PLAY.equals(key)) {
+                // 设置显示或隐藏
+                ViewUtil.setVisibility(sivAutoPlaySettings, value ? View.VISIBLE : View.GONE);
+            } else if (Constant.Preference.AUTO_COMMENT.equals(key)) {
+                // 设置显示或隐藏
+                ViewUtil.setVisibility(etiAutoCommentList, value ? View.VISIBLE : View.GONE);
+            } else if (Constant.Preference.REMOVE_LIMIT.equals(key)) {
+                // 设置显示或隐藏
+                ViewUtil.setVisibility(sivRemoveLimitSettings, value ? View.VISIBLE : View.GONE);
+            }
             sendRefreshPreferenceBroadcast(key, value);
             return true;
         }

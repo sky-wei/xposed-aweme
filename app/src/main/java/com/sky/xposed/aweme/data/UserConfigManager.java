@@ -96,6 +96,27 @@ public class UserConfigManager {
         return time * 1000;
     }
 
+    public long getAutoPlaySleepTime() {
+
+        int time = ConversionUtil.parseInt(getString(
+                Constant.Preference.AUTO_PLAY_SLEEP_TIME,
+                Integer.toString(Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME)));
+
+        if (time <= 0) {
+            return Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME * 1000;
+        }
+
+        return time * 1000;
+    }
+
+    public int getAutoPlayType() {
+        return mCachePreferences.getInt(Constant.Preference.AUTO_PLAY_TYPE, Constant.PlayType.TDEFAULT);
+    }
+
+    public boolean isTimingPlay() {
+        return Constant.PlayType.TIMING == getAutoPlayType();
+    }
+
     private Boolean getBoolean(String key) {
         return mCachePreferences.getBoolean(key, false);
     }

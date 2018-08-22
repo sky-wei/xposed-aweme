@@ -32,10 +32,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sky.xposed.aweme.BuildConfig;
 import com.sky.xposed.aweme.Constant;
 import com.sky.xposed.aweme.R;
 import com.sky.xposed.aweme.ui.base.BaseDialog;
 import com.sky.xposed.aweme.ui.util.DialogUtil;
+import com.sky.xposed.aweme.ui.util.UriUtil;
 import com.sky.xposed.aweme.util.DonateUtil;
 import com.sky.xposed.common.ui.util.LayoutUtil;
 import com.sky.xposed.common.ui.util.ViewUtil;
@@ -44,6 +46,7 @@ import com.sky.xposed.common.ui.view.SimpleItemView;
 import com.sky.xposed.common.ui.view.TitleView;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.DisplayUtil;
+import com.sky.xposed.common.util.ResourceUtil;
 import com.sky.xposed.common.util.ToastUtil;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -75,7 +78,7 @@ public class DonateDialog extends BaseDialog {
         sivAliPayDonate = ViewUtil.newSimpleItemView(getContext(), "支付宝捐赠");
         sivWeChatDonate = ViewUtil.newSimpleItemView(getContext(), "微信捐赠");
 
-        mCommonFrameLayout.addContent(sivAliPayDonate, true);
+        mCommonFrameLayout.addContent(sivAliPayDonate);
         mCommonFrameLayout.addContent(sivWeChatDonate);
 
         return mCommonFrameLayout;
@@ -85,6 +88,20 @@ public class DonateDialog extends BaseDialog {
     protected void initView(View view, Bundle args) {
 
         mToolbar.setTitle(Constant.Name.TITLE);
+        mToolbar.showBack();
+
+        // 设置图标
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_clear))
+                .into(mToolbar.getBackView());
+
+        mToolbar.setOnBackEventListener(new TitleView.OnBackEventListener() {
+            @Override
+            public void onEvent(View view) {
+                // 关闭
+                dismiss();
+            }
+        });
 
         sivAliPayDonate.setOnClickListener(new View.OnClickListener() {
             @Override

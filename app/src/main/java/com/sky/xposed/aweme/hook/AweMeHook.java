@@ -47,7 +47,6 @@ import com.sky.xposed.common.ui.util.LayoutUtil;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.common.util.ResourceUtil;
-import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.javax.MethodHook;
 import com.squareup.picasso.Picasso;
 
@@ -105,9 +104,13 @@ public class AweMeHook extends BaseHook {
 
     public void onModifyValue(String key, Object value) {
 
-        if (Constant.Preference.AUTO_PLAY.equals(key) && (boolean) value) {
+        if (Constant.Preference.AUTO_PLAY.equals(key)) {
             // 设置自动播放
-            ToastUtil.show("播放完当前视频后将自动播放下一个视频！");
+//            ToastUtil.show("播放完当前视频后将自动播放下一个视频！");
+            mAutoPlayHandler.setAutoPlay((Boolean) value);
+        } else if (Constant.Preference.AUTO_PLAY_TYPE.equals(key)) {
+            // 切换播放类型
+            mAutoPlayHandler.switchPlayType((Integer) value);
         }
     }
 
@@ -125,6 +128,9 @@ public class AweMeHook extends BaseHook {
                         // 保存当前对象
                         mObjectManager.setViewPager(XposedHelpers.getObjectField(
                                 param.thisObject, mVersionConfig.fieldMViewPager));
+
+                        // 开始播放
+                        mAutoPlayHandler.start();
                     }
                 });
 
@@ -136,6 +142,9 @@ public class AweMeHook extends BaseHook {
                     public void onAfter(XC_MethodHook.MethodHookParam methodHookParam) {
                         // 重置对象
                         mObjectManager.setViewPager(null);
+
+                        // 停止播放
+                        mAutoPlayHandler.stop();
                     }
                 });
 
@@ -148,7 +157,7 @@ public class AweMeHook extends BaseHook {
                     public void onAfter(XC_MethodHook.MethodHookParam param) {
                         // 获取Tab切换的名称
                         String name = (String) param.args[0];
-                        if ("HOME".equals(name)) mAutoPlayHandler.stopPlay();
+                        mAutoPlayHandler.setAutoPlay("HOME".equals(name));
                     }
                 });
 
@@ -162,7 +171,7 @@ public class AweMeHook extends BaseHook {
 
                         if (mUserConfigManager.isAutoPlay()) {
                             // 播放下一个
-                            mAutoPlayHandler.playNext();
+                            mAutoPlayHandler.next();
                         }
                     }
                 });
