@@ -87,7 +87,7 @@ public class DonateDialog extends BaseDialog {
     @Override
     protected void initView(View view, Bundle args) {
 
-        mToolbar.setTitle(Constant.Name.TITLE);
+        mToolbar.setTitle("支持我们");
         mToolbar.showBack();
 
         // 设置图标

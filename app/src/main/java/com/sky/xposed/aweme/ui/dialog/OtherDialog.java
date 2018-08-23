@@ -66,7 +66,7 @@ public class OtherDialog extends BaseDialog implements TitleView.OnBackEventList
     @Override
     protected void initView(View view, Bundle args) {
 
-        mToolbar.setTitle("更多设置");
+        mToolbar.setTitle("其他设置");
         mToolbar.showBack();
         mToolbar.setOnBackEventListener(this);
 
