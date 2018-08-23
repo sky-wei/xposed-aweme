@@ -18,6 +18,8 @@ package com.sky.xposed.aweme.hook.handler;
 
 import android.view.ViewGroup;
 
+import com.sky.xposed.aweme.Constant;
+import com.sky.xposed.aweme.data.UserConfigManager;
 import com.sky.xposed.aweme.hook.HookManager;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.RandomUtil;
@@ -27,34 +29,100 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class AutoPlayHandler {
 
+    private HookManager mHookManager;
+    private UserConfigManager mUserConfigManager;
+    private AutoPlay mAutoPlay;
+
     public AutoPlayHandler(HookManager hookManager) {
+        mHookManager = hookManager;
+        mUserConfigManager = mHookManager.getUserConfigManager();
+        switchType(getPlayType());
     }
 
+    /**
+     * 开始播放
+     */
     public void start() {
 
-    }
-
-    public void stop() {
-
-    }
-
-    public void next() {
-
-    }
-
-    public void setAutoPlay(boolean play) {
-
-        if (play) {
-            // 开始自动播放
-            start();
-        } else {
-            // 关闭自动播放
-            stop();
+        if (isAutoPlay() && mAutoPlay != null) {
+            // 开始播放
+            mAutoPlay.start();
         }
     }
 
-    public void switchPlayType(int type) {
+    /**
+     * 停止播放
+     */
+    public void stop() {
 
+        if (isAutoPlay() && mAutoPlay != null) {
+            // 停止播放
+            mAutoPlay.stop();
+        }
+    }
+
+    /**
+     * 播放下一个
+     */
+    public void next() {
+
+        if (isAutoPlay() && mAutoPlay != null) {
+            // 播放下一个
+            mAutoPlay.next();
+        }
+    }
+
+    /**
+     * 设置是否播放
+     * @param play
+     */
+    public void setPlay(boolean play) {
+
+        if (!play) {
+            // 关闭播放
+            stop();
+            return ;
+        }
+
+        // 开始播放
+        start();
+    }
+
+    /**
+     * 切换类型
+     * @param type
+     */
+    public void switchType(int type) {
+
+        if (mAutoPlay != null) {
+            // 停止
+            mAutoPlay.stop();
+            mAutoPlay = null;
+        }
+
+        if (Constant.PlayType.TIMING == type) {
+            // 创建定时播放
+            mAutoPlay = new TimingPlayHandler(mHookManager);
+        } else {
+            // 创建默认播放
+            mAutoPlay = new DefaultPlayHandler(mHookManager);
+        }
+    }
+
+    /**
+     * 获取自动播放的类型
+     * @return
+     */
+    public int getPlayType() {
+        return mUserConfigManager.getAutoPlayType();
+    }
+
+    /**
+     * 是否自动播放
+     * @return
+     */
+    private boolean isAutoPlay() {
+        return mUserConfigManager.isAutoPlay();
     }
 
     /**

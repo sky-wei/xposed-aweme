@@ -106,11 +106,11 @@ public class AweMeHook extends BaseHook {
 
         if (Constant.Preference.AUTO_PLAY.equals(key)) {
             // 设置自动播放
-//            ToastUtil.show("播放完当前视频后将自动播放下一个视频！");
-            mAutoPlayHandler.setAutoPlay((Boolean) value);
+            mAutoPlayHandler.setPlay((Boolean) value);
         } else if (Constant.Preference.AUTO_PLAY_TYPE.equals(key)) {
-            // 切换播放类型
-            mAutoPlayHandler.switchPlayType((Integer) value);
+            // 切换播放类型-开始播放
+            mAutoPlayHandler.switchType((Integer) value);
+            mAutoPlayHandler.start();
         }
     }
 
@@ -155,9 +155,17 @@ public class AweMeHook extends BaseHook {
                 .hook(new MethodHook.AfterCallback() {
                     @Override
                     public void onAfter(XC_MethodHook.MethodHookParam param) {
+
                         // 获取Tab切换的名称
                         String name = (String) param.args[0];
-                        mAutoPlayHandler.setAutoPlay("HOME".equals(name));
+
+                        if ("HOME".equals(name)) {
+                            // 启动
+                            mAutoPlayHandler.start();
+                        } else {
+                            // 停止
+                            mAutoPlayHandler.stop();
+                        }
                     }
                 });
 
@@ -168,11 +176,8 @@ public class AweMeHook extends BaseHook {
                 .hook(new MethodHook.AfterCallback() {
                     @Override
                     public void onAfter(XC_MethodHook.MethodHookParam param) {
-
-                        if (mUserConfigManager.isAutoPlay()) {
-                            // 播放下一个
-                            mAutoPlayHandler.next();
-                        }
+                        // 播放下一个
+                        mAutoPlayHandler.next();
                     }
                 });
     }
@@ -560,6 +565,22 @@ public class AweMeHook extends BaseHook {
 
                         Intent intent = (Intent) param.args[4];
                         ToStringUtil.toString("Instrumentation#execStartActivity: " + intent.getComponent(), intent);
+                    }
+                });
+
+        findMethod(
+                "android.app.Dialog", "show")
+                .hook(new MethodHook.BeforeCallback() {
+                    @Override
+                    public void onBefore(XC_MethodHook.MethodHookParam param) {
+
+                        Alog.d(">>>>>>>>>>>>>> dialog " + param.thisObject);
+
+                        try {
+                            throw new NullPointerException("t");
+                        } catch (Throwable tr) {
+                            Alog.e("TT", tr);
+                        }
                     }
                 });
 
