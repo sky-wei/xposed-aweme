@@ -575,12 +575,6 @@ public class AweMeHook extends BaseHook {
                     public void onBefore(XC_MethodHook.MethodHookParam param) {
 
                         Alog.d(">>>>>>>>>>>>>> dialog " + param.thisObject);
-
-                        try {
-                            throw new NullPointerException("t");
-                        } catch (Throwable tr) {
-                            Alog.e("TT", tr);
-                        }
                     }
                 });
 
