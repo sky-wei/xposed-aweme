@@ -173,9 +173,9 @@ public class AweMeHook extends BaseHook {
                 mVersionConfig.classBaseListFragment,
                 mVersionConfig.methodPlayComplete,
                 String.class)
-                .hook(new MethodHook.AfterCallback() {
+                .hook(new MethodHook.BeforeCallback() {
                     @Override
-                    public void onAfter(XC_MethodHook.MethodHookParam param) {
+                    public void onBefore(XC_MethodHook.MethodHookParam methodHookParam) {
                         // 播放下一个
                         mAutoPlayHandler.next();
                     }

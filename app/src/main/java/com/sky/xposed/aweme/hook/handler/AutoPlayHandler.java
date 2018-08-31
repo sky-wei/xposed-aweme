@@ -150,7 +150,7 @@ public class AutoPlayHandler {
         public void next() {
             // 开始播放
             isPlaying = true;
-            mHandler.postDelayed(this, 500);
+            mHandler.post(this);
         }
 
         @Override

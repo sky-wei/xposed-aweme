@@ -39,6 +39,7 @@ public class VersionManager {
         CONFIG_MAP.put("2.3.0", Config230.class);
         CONFIG_MAP.put("2.4.0", Config240.class);
         CONFIG_MAP.put("2.5.0", Config250.class);
+        CONFIG_MAP.put("2.5.1", Config251.class);
     }
 
     private Context mContext;
@@ -83,6 +84,41 @@ public class VersionManager {
 
     private PackageUtil.SimplePackageInfo getPackageInfo() {
         return PackageUtil.getSimplePackageInfo(mContext, mContext.getPackageName());
+    }
+
+    public static class Config251 extends Config {
+
+        public Config251() {
+
+            classHomeChange = "com.ss.android.ugc.aweme.main.MainActivity$14";
+            classShareFragment = "com.ss.android.ugc.aweme.share.m";
+            classCutVideoActivity = "com.ss.android.ugc.aweme.shortvideo.cut.CutVideoActivity";
+            classCutVideoUtil = "com.ss.android.ugc.aweme.shortvideo.cut.c";
+            classAppUpdate = "com.ss.android.common.update.g";
+            classFeedApi = "com.ss.android.ugc.aweme.feed.g.g";
+            classCommentPublishPresenter = "com.ss.android.ugc.aweme.comment.e.h";
+            classCommentPublishModel = "com.ss.android.ugc.aweme.comment.e.g";
+
+            classMyProfileFragment = "";
+            classMenuAdapter = "com.ss.android.ugc.aweme.profile.ui.m";
+            classMenuAdapterData = "com.ss.android.ugc.aweme.profile.ui.m.a";
+
+            methodOnResume = "i";
+            methodOnPause = "j";
+            methodSplashActivitySkip = "goMainActivity";
+            methodCutVideoTime = "k";
+            methodCutVideoTime2 = "a";
+            methodPlayComplete = "k";
+
+            idShareLayout = "gz";
+            idAttentionLayout = "al4";
+            idLike1Layout = "al7";
+            idLike2Layout = "al8";
+
+            fieldLimitTime = "t";
+            fieldViewTagAweme = "e";
+            fieldShortVideoContext = "c";
+        }
     }
 
     public static class Config250 extends Config {
@@ -342,8 +378,10 @@ public class VersionManager {
 
         public String methodAwemeIsIsAppAd = "isAppAd";
 
+		/** !((IBridgeService) ServiceManager.get().getService(IBridgeService.class)).isFocusOnVideoTime() */
         public String methodCutVideoTime = "k";
 
+		/** !ServiceManager.get().getService(IBridgeService.class).isFocusOnVideoTime() */
         public String methodCutVideoTime2 = "";
 
         public String methodAppUpdate = "v";
