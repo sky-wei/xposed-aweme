@@ -44,6 +44,7 @@ public class OtherDialog extends BaseDialog implements TitleView.OnBackEventList
 
     private SwitchItemView sivRemoveAd;
     private SwitchItemView sivDisableUpdate;
+    private SwitchItemView sivCopyVideoDesc;
 
     @Override
     protected View createView(LayoutInflater inflater, ViewGroup container) {
@@ -56,9 +57,11 @@ public class OtherDialog extends BaseDialog implements TitleView.OnBackEventList
 
         sivRemoveAd = ViewUtil.newSwitchItemView(getContext(), "移除抖音广告");
         sivDisableUpdate = ViewUtil.newSwitchItemView(getContext(), "禁用抖音更新");
+        sivCopyVideoDesc = ViewUtil.newSwitchItemView(getContext(), "复制视频描述");
 
         mCommonFrameLayout.addContent(sivRemoveAd);
         mCommonFrameLayout.addContent(sivDisableUpdate);
+        mCommonFrameLayout.addContent(sivCopyVideoDesc);
 
         return mCommonFrameLayout;
     }
@@ -77,6 +80,7 @@ public class OtherDialog extends BaseDialog implements TitleView.OnBackEventList
 
         trackBind(sivRemoveAd, Constant.Preference.REMOVE_AD, false, mBooleanChangeListener);
         trackBind(sivDisableUpdate, Constant.Preference.DISABLE_UPDATE, false, mBooleanChangeListener);
+        trackBind(sivCopyVideoDesc, Constant.Preference.COPY_VIDEO_DESC, false, mBooleanChangeListener);
     }
 
     @Override

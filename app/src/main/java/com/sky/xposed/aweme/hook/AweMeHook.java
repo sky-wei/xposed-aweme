@@ -19,6 +19,8 @@ package com.sky.xposed.aweme.hook;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +49,7 @@ import com.sky.xposed.common.ui.util.LayoutUtil;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.common.util.ResourceUtil;
+import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.javax.MethodHook;
 import com.squareup.picasso.Picasso;
 
@@ -100,6 +103,9 @@ public class AweMeHook extends BaseHook {
 
         // 更新Hook
         updateHook();
+
+        // 其他的Hook
+        otherHook();
     }
 
     public void onModifyValue(String key, Object value) {
@@ -340,6 +346,26 @@ public class AweMeHook extends BaseHook {
                 });
     }
 
+    /**
+     * 其他的Hook
+     */
+    private void otherHook() {
+
+        findMethod(
+                mVersionConfig.classVideoViewHolder,
+                mVersionConfig.methodCopyDesc)
+                .hook(new MethodHook.AfterCallback() {
+                    @Override
+                    public void onAfter(XC_MethodHook.MethodHookParam param) {
+
+                        // 处理长按事件
+                        View mDescView = (View) XposedHelpers
+                                .getObjectField(param.thisObject, mVersionConfig.fieldDescView);
+                        mDescView.setOnLongClickListener(mOnCopyListener);
+                    }
+                });
+    }
+
     private void injectionView(final Dialog dialog) {
 
         final FragmentManager fragmentManager =
@@ -540,6 +566,32 @@ public class AweMeHook extends BaseHook {
         return (boolean) XposedHelpers.callMethod(aweme, mVersionConfig.methodAwemeIsAd)
                 || (boolean) XposedHelpers.callMethod(aweme, mVersionConfig.methodAwemeIsIsAppAd);
     }
+
+    /**
+     * 处理复制事件的
+     */
+    private final View.OnLongClickListener mOnCopyListener = new View.OnLongClickListener() {
+
+        @Override
+        public boolean onLongClick(View v) {
+
+            if (!mUserConfigManager.isCopyVideoDesc()) {
+                return false;
+            }
+
+            try {
+                // 把信息复制到粘贴板上
+                ClipboardManager cm = (ClipboardManager)
+                        getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText(null, ((TextView) v).getText()));
+                ToastUtil.show("内容已复制到粘贴板!");
+            } catch (Throwable tr) {
+                Alog.e("出异常了", tr);
+                ToastUtil.show("内容复制到粘贴板出错了!");
+            }
+            return true;
+        }
+    };
 
     private void testHook() {
 

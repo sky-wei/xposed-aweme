@@ -65,6 +65,10 @@ public abstract class BaseHook {
         return ActivityThread.currentActivityThread().getSystemContext();
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     public XC_LoadPackage.LoadPackageParam getLoadPackageParam() {
         return mParam;
     }

@@ -67,6 +67,10 @@ public class UserConfigManager {
         return getBoolean(Constant.Preference.DISABLE_UPDATE);
     }
 
+    public boolean isCopyVideoDesc() {
+        return getBoolean(Constant.Preference.COPY_VIDEO_DESC);
+    }
+
     public boolean isCommentListEmpty() {
 
         Set<String> commentSet = mCachePreferences.getStringSet(

@@ -66,6 +66,9 @@ public interface Constant {
 
         /** 播放的类型 */
         String AUTO_PLAY_TYPE = "auto_play_type";
+
+        /** 复制视频描述 */
+        String COPY_VIDEO_DESC = "copy_video_desc";
     }
 
     interface Name {
