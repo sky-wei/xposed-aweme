@@ -61,7 +61,7 @@ public class DialogUtil {
             TextView tvHead = new TextView(context);
             tvHead.setTextColor(Color.BLACK);
             tvHead.setTextSize(14f);
-            tvHead.setText("版本：v" + BuildConfig.VERSION_NAME + "\n想了解更多类似作品或者二叶草最新动态,加入二叶草社区");
+            tvHead.setText("版本：v" + BuildConfig.VERSION_NAME + "\n想了解更多类似作品\n请关注公众号");
 
             ImageView ivCommunity = new ImageView(context);
             ivCommunity.setLayoutParams(LayoutUtil.newWrapLinearLayoutParams());
@@ -70,7 +70,7 @@ public class DialogUtil {
             TextView tvTail = new TextView(context);
             tvTail.setTextColor(Color.BLACK);
             tvTail.setTextSize(14f);
-            tvTail.setText("官方QQ群：\n794327446 (1群)\n824933593 (2群)\n592216812 (3群)\n版权所有　二叶草出品");
+            tvTail.setText("官方QQ群：\n794327446 (1群)\n824933593 (2群)\n592216812 (3群)");
 
             content.addView(tvHead);
             content.addView(ivCommunity);
